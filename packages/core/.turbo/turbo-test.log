@@ -1,0 +1,14 @@
+
+> @verified-attention/core@0.1.0-dev test /Users/nickrotich/Desktop/portfolio/projects/python/verified-attention/packages/core
+> vitest run
+
+
+ RUN  v1.6.1 /Users/nickrotich/Desktop/portfolio/projects/python/verified-attention/packages/core
+
+ ✓ src/evidence.test.ts  (63 tests) 12ms
+
+ Test Files  1 passed (1)
+      Tests  63 passed (63)
+   Start at  06:11:30
+   Duration  407ms (transform 102ms, setup 0ms, collect 114ms, tests 12ms, environment 0ms, prepare 71ms)
+

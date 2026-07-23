@@ -466,6 +466,64 @@ Protocol specifications (VAP) are additionally dedicated to the public domain vi
 
 ---
 
+## Development — Make Targets
+
+All backend entrypoints are exposed as Make targets. Each target is verbose (prints what it's doing), idempotent (safe to re-run), and documented here.
+
+**Python Virtual Environment:** All Python targets use `.venv/bin/python` — never bare `python` or `python3`. The `venv` target creates it if missing (prefers Python 3.11, falls back to `python3`). If the `.venv` was created at a different path and moved/copied, its shebangs will break — run `make clean-venv && make venv` to recreate.
+
+**TypeScript Monorepo:** All TS targets use `pnpm` with Turborepo. Packages live in `packages/core`, `packages/pipeline`, `packages/store`.
+
+### Quick Start
+
+```bash
+make install     # Create .venv + install pnpm packages
+make test        # Run ALL tests (Python + TypeScript)
+make verify      # Full verification: build + typecheck + lint + test
+```
+
+### Target Reference
+
+| Target | Purpose | Prerequisites | Usage | Expected Output |
+|--------|---------|---------------|-------|-----------------|
+| `make help` | List all available targets with descriptions | None | `make help` | Colored list of all targets |
+| `make venv` | Create or verify Python `.venv` (Python 3.11+ preferred) | `python3` or `python3.11` installed | `make venv` | `.venv/` directory with working Python |
+| `make install` | Install all dependencies (Python venv + pnpm packages) | `python3`, `pnpm` | `make install` | `.venv/` created, `node_modules/` populated |
+| `make prototype` | Run the Python evidence ingestion prototype (`scripts/prototype-ingest.py`) | `.venv` (auto-created) | `make prototype` | End-to-end pipeline output: mock observations → evidence → store |
+| `make test-py` | Run Python tests (currently smoke-tests the prototype) | `.venv` (auto-created) | `make test-py` | Prototype runs without error |
+| `make build` | Build all TypeScript packages | `pnpm` installed | `make build` | `dist/` in each package, exit 0 |
+| `make test-ts` | Run all TypeScript unit tests | Packages built | `make test-ts` | All tests pass (currently 211 tests across core, pipeline, store) |
+| `make typecheck` | Run `tsc --noEmit` across all packages | `pnpm` installed | `make typecheck` | No type errors, exit 0 |
+| `make lint` | Run ESLint across all packages | `pnpm` installed | `make lint` | No errors (warnings non-blocking) |
+| `make test` | Run ALL tests — Python + TypeScript | `.venv`, pnpm packages | `make test` | All tests pass |
+| `make verify` | Full verification gate: build + typecheck + lint + test | `.venv`, pnpm packages | `make verify` | All gates pass, exit 0 |
+| `make clean` | Remove build artifacts (`dist/`), coverage, prototype data | None | `make clean` | Clean working tree |
+| `make clean-venv` | Remove `.venv` (forces recreation on next `make venv`) | None | `make clean-venv` | `.venv/` deleted |
+
+### Python Prototype Details
+
+The prototype (`scripts/prototype-ingest.py`) demonstrates the VAP evidence pipeline:
+1. Creates 15 mock observations (scroll, click, keypress, visibility, focus)
+2. Validates each observation against VAP Section 4 requirements
+3. Normalizes to canonical signal types
+4. Creates evidence from observations (E-INTERACTION, E-VISIBLE, E-DURATION, E-CONTEXT)
+5. Stores evidence in append-only JSONL file (`data/evidence_store.jsonl`)
+6. Retrieves and displays stored evidence
+
+```bash
+make prototype          # Run via Make (preferred)
+.venv/bin/python scripts/prototype-ingest.py  # Run directly
+```
+
+### Verification Protocol
+
+For COMMAND_RUNWAY sprint execution, the standard verification sequence is:
+```bash
+make verify   # build → typecheck → lint → test (all must pass)
+```
+
+---
+
 ## Citation
 
 If you reference this work in academic or technical contexts:

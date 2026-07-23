@@ -1,0 +1,7 @@
+
+> @verified-attention/store@0.1.0-dev typecheck /Users/nickrotich/Desktop/portfolio/projects/python/verified-attention/packages/store
+> tsc --noEmit
+
+src/evidence-store.ts(142,13): error TS2322: Type 'StoredEvidence | undefined' is not assignable to type 'StoredEvidence'.
+  Type 'undefined' is not assignable to type 'StoredEvidence'.
+ ELIFECYCLE  Command failed with exit code 2.

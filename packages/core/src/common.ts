@@ -6,9 +6,10 @@
 import { z } from 'zod';
 
 /**
- * RFC 3339 timestamp with microsecond precision
+ * RFC 3339 timestamp with millisecond or microsecond precision.
+ * Accepts both Z (UTC) and offset (+HH:MM) forms.
  */
-export const TimestampSchema = z.string().datetime({ precision: 6, offset: true });
+export const TimestampSchema = z.string().datetime({ offset: true });
 export type Timestamp = z.infer<typeof TimestampSchema>;
 
 /**

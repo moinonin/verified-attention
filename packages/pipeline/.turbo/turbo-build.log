@@ -1,0 +1,17 @@
+
+> @verified-attention/pipeline@0.1.0-dev build /Users/nickrotich/Desktop/portfolio/projects/python/verified-attention/packages/pipeline
+> tsdown
+
+[34mℹ[39m tsdown [2mv0.11.13[22m powered by rolldown [2mv1.0.0-beta.9[22m
+[34mℹ[39m Using tsdown config: [4m/Users/nickrotich/Desktop/portfolio/projects/python/verified-attention/packages/pipeline/tsdown.config.ts[24m
+[34mℹ[39m entry: [34msrc/index.ts[39m
+[34mℹ[39m target: [34mnode20.0.0[39m
+[34mℹ[39m tsconfig: [34mtsconfig.json[39m
+[34mℹ[39m Build start
+[34mℹ[39m Cleaning 4 files
+[34mℹ[39m [2mdist/[22m[1mindex.js[22m        [2m10.31 kB[22m [2m│ gzip: 3.21 kB[22m
+[34mℹ[39m [2mdist/[22mindex.js.map    [2m21.96 kB[22m [2m│ gzip: 6.26 kB[22m
+[34mℹ[39m [2mdist/[22mindex.d.ts.map  [2m 5.16 kB[22m [2m│ gzip: 1.86 kB[22m
+[34mℹ[39m [2mdist/[22m[32m[1mindex.d.ts[22m[39m      [2m 7.15 kB[22m [2m│ gzip: 1.95 kB[22m
+[34mℹ[39m 4 files, total: 44.57 kB
+[32m✔[39m Build complete in [32m532ms[39m
