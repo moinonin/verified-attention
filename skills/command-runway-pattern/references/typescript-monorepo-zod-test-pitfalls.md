@@ -1,6 +1,6 @@
-# TypeScript Monorepo + Zod: Test Plumbing Pitfalls
+# TypeScript Monorepo + Zod: Test & Lint Plumbing Pitfalls
 
-Durable traps encountered during Sprint 2 of the Verified Attention Engine (TS monorepo, pnpm + Turborepo, Zod schemas, Vitest). None are environment-specific — all are general technique lessons that will recur in any similar stack. These surface during the ✎ mutate and ✓ verify phases of a COMMAND_RUNWAY stage.
+Durable traps encountered during the Verified Attention Engine (TS monorepo, pnpm + Turborepo, Zod schemas, Vitest). None are environment-specific — all are general technique lessons that will recur in any similar stack. These surface during the ✎ mutate and ✓ verify phases of a COMMAND_RUNWAY stage.
 
 ## 1. Zod `.datetime({ precision: N })` rejects standard JS ISO timestamps
 
@@ -131,7 +131,7 @@ evidenceType: 'E-INTERACTION' as EvidenceType
 evidenceType: EvidenceType.INTERACTION
 ```
 
-**Rule:** When passing string literals that must match a Zod enum type, always use `as const` or explicit ` or ` or `as EvidenceType` to satisfy TypeScript's type narrowing.
+**Rule:** When passing string literals that must match a Zod enum type, always use `as const` or explicit `as EvidenceType` to satisfy TypeScript's type narrowing.
 
 ## 8. JUnit XML generator — avoid variable shadowing in map callbacks
 
@@ -153,6 +153,119 @@ for (const [suiteName, suiteResults] of results) {
 
 **Rule:** Never shadow a variable in a `for...of` loop that's also used outside the loop. Use distinct names (`suiteResults` vs `results`).
 
+## 9. ESLint v9+ flat config setup in pnpm/Turborepo monorepos
+
+**Symptom:** `pnpm lint` fails with `sh: eslint: command not found` or `ESLint couldn't find an eslint.config.(js|mjs|cjs) file.`
+
+**Root cause:** ESLint v9.0+ replaced `.eslintrc.*` with `eslint.config.js` (flat config). If the project has no eslint installed, or has an old `.eslintrc` format, lint scripts in every package fail.
+
+**Fix sequence:**
+```bash
+# 1. Install deps at the workspace root (-Dw for dev deps)
+pnpm add -Dw eslint @eslint/js typescript-eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser
+
+# 2. Create eslint.config.js (flat config, NOT .eslintrc.cjs) at root
+#    Use typescript-eslint config() helper for flat config format
+
+# 3. Verify each package's lint script uses `eslint src --ext .ts`
+#    The flat config at root is auto-discovered by ESLint walking up from each package
+```
+
+**Minimal flat config that works (eslint.config.js):**
+```js
+const js = require('@eslint/js');
+const tseslint = require('typescript-eslint');
+
+module.exports = tseslint.config(
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
+  {
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      parserOptions: {
+        project: ['./tsconfig.json', './packages/*/tsconfig.json'],
+        tsconfigRootDir: __dirname,
+      },
+    },
+    plugins: {
+      '@typescript-eslint': require('@typescript-eslint/eslint-plugin'),
+    },
+    rules: {
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-explicit-any': 'warn',
+      'no-console': 'off',
+    },
+    ignores: ['dist/', 'node_modules/', '*.config.*', '*.d.ts', '*.test.ts'],
+  }
+);
+```
+
+**Pitfall 1:** If you omit `parserOptions.project`, type-checked rules like `@typescript-eslint/no-floating-promises` crash with "You have used a rule which requires type information, but don't have parserOptions set to generate type information." Either include `project` pointing to tsconfigs OR drop type-checked rules from `recommendedTypeChecked`.
+
+**Pitfall 2:** `@eslint/js` is a separate package from `eslint`. You need both — `@eslint/js` provides `js.configs.recommended`, `eslint` provides the CLI.
+
+**Pitfall 3:** If you create `.eslintrc.cjs` by mistake, ESLint v9+ will warn that it needs migration. Delete it and use `eslint.config.js` instead.
+
+## 10. `require('crypto')` in ES module TypeScript triggers `@typescript-eslint/no-require-imports` error
+
+**Symptom:** ESLint error: `A require() style import is forbidden @typescript-eslint/no-require-imports`
+
+**Root cause:** Using `const { randomUUID } = require('crypto')` inside a function body in a TypeScript ES module file. The `@typescript-eslint/no-require-imports` rule (enabled in `recommended`) flags all `require()` calls.
+
+**Fix:** Move the import to the top of the file as an ES module import:
+```ts
+// BAD — inside function body, triggers lint error
+export function createSession() {
+  const { randomUUID } = require('crypto');
+  // ...
+}
+
+// GOOD — top-level ES import
+import { randomUUID } from 'crypto';
+export function createSession() {
+  // use randomUUID() directly
+}
+```
+
+**Rule:** In TypeScript ES module projects with `@typescript-eslint/recommended`, never use `require()`. All imports go at the top of the file. This applies to `crypto`, `path`, `fs`, and all Node builtins. When fixing this in an existing codebase, search for ALL `require('crypto')` calls across the package (common pattern: one per file in factory functions like `createSession`, `createProof`, `createClaim`, `createEvidence`).
+
+## 11. `prefer-const` for variables that are declared `let` but never reassigned
+
+**Symptom:** ESLint error: `'totalErrors' is never reassigned. Use 'const' instead prefer-const`
+
+**Fix:** Change `let` to `const` for any variable that is only read after initialization. Common in accumulator/counters that are computed once:
+```ts
+// BAD
+let totalErrors = 0;
+let totalTime = 0;
+// (never reassigned — just read in the return template)
+
+// GOOD
+const totalErrors = 0;
+const totalTime = 0;
+```
+
+## 12. Unused import warnings — vitest imports in non-test files
+
+**Symptom:** ESLint warnings: `'describe' is defined but never used`, `'it' is defined but never used`, etc.
+
+**Root cause:** Importing vitest functions (`describe`, `it`, `expect`, `vi`, `beforeAll`, `afterAll`) in a source file (not a test file) where they're not used. The test framework is globally available in test files but should not be imported in library source.
+
+**Fix:** Remove the vitest import from source files entirely. Only import what's needed:
+```ts
+// BAD — in src/index.ts (library source)
+import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
+import { z } from 'zod';
+
+// GOOD — in src/index.ts
+import type { z } from 'zod';  // if only used as type
+// or
+import { z } from 'zod';      // if used as a value
+```
+
+**Rule:** Vitest imports belong ONLY in `*.test.ts` files. If a source file needs Zod's `z` only for type annotations (`z.ZodSchema<T>`), use `import type { z } from 'zod'` to avoid both unused-value and consistent-type-import warnings.
+
 ## Summary Table
 
 | Pitfall | Diagnostic | Fix |
@@ -165,3 +278,7 @@ for (const [suiteName, suiteResults] of results) {
 | Discriminated union strips unknown payload fields | Test passes when it should fail | Add `.strict()` to payload schemas |
 | TS literal not assignable to enum type | `'"E-INTERACTION"' not assignable to 'EvidenceType'` | Use `as const` or `as EvidenceType` |
 | JUnit XML callback implicit `any` | Variable shadowing in `for...of` | Don't shadow loop variable; use explicit types in callbacks |
+| ESLint v9 flat config not found | `sh: eslint: command not found` or `couldn't find eslint.config` | Install `eslint @eslint/js typescript-eslint` + create `eslint.config.js` (flat) |
+| `require()` in ES module TS | `@typescript-eslint/no-require-imports` error | Replace with top-level `import { x } from 'crypto'` |
+| `prefer-const` error | `'X' is never reassigned` | Change `let` to `const` for never-reassigned vars |
+| Unused vitest imports in source | `'describe' is defined but never used` | Remove vitest imports from non-test files; use `import type` for type-only zod |
