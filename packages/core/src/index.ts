@@ -178,3 +178,13 @@ export {
   isProofExpired,
   isProofValid
 } from './proof';
+
+// Protocol Messages
+export {
+  SubmitEvidenceSchema,
+  ClaimRequestSchema,
+  VerificationCreateSchema,
+  type SubmitEvidence,
+  type ClaimRequest,
+  type VerificationCreate
+} from './messages';

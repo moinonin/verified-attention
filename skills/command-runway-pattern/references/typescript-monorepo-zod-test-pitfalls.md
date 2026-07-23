@@ -92,6 +92,67 @@ describe('debug', () => {
 
 Run with `pnpm test debug` to see the exact Zod issues (code, validation, message, path). Delete the debug file once the real tests pass. Faster than reasoning about schema shapes from memory — Zod's issue output tells you precisely which field failed and why.
 
+## 6. Zod discriminated union strips unknown payload fields — use `.strict()` for strict validation
+
+**Symptom:** A test expects `EvidencePayloadSchema.safeParse({ evidenceType: 'E-INTERACTION', payload: { visibleDurationMs: 5000 } })` to fail (wrong payload fields for E-INTERACTION), but it passes with `payload: {}`.
+
+**Root cause:** Zod's `z.discriminatedUnion('evidenceType', [...])` matches the discriminator and then validates the payload against the corresponding schema. Unknown fields in the payload are **stripped**, not rejected. The validation passes with an empty/partial payload.
+
+**Fix:** Add `.strict()` to each payload schema to reject unknown fields:
+```ts
+export const InteractionEvidencePayloadSchema = z.object({
+  avgScrollVelocity: z.number().optional(),
+  scrollDirectionChanges: z.number().int().optional(),
+  clickCount: z.number().int().optional(),
+  keyPressCount: z.number().int().optional(),
+  interactionDurationMs: z.number().int().optional(),
+  readingPauses: z.array(z.object({ ... })).optional(),
+  engagementScore: z.number().min(0).max(1).optional()
+}).strict();  // <-- rejects unknown fields
+```
+
+**Rule:** If a discriminated union's payload schemas must reject extra fields, mark each payload schema `.strict()`. Without it, Zod silently ignores fields not in the schema.
+
+## 7. TypeScript literal type narrowing with Zod enums — use `as const` or `as EvidenceType`
+
+**Symptom:** TypeScript errors when passing literal strings like `'E-INTERACTION'` to a function expecting `EvidenceType`: `Type '"E-INTERACTION"' is not assignable to type 'EvidenceType'`.
+
+**Root cause:** TypeScript doesn't automatically narrow string literals to the enum type. The enum `EvidenceType` has values like `E-INTERACTION`, but TypeScript treats `'E-INTERACTION'` as `string`, not `EvidenceType.INTERACTION`.
+
+**Fix:** Use `as const` or explicit cast:
+```ts
+// Option 1: as const (preferred — narrows to literal type)
+evidenceType: 'E-INTERACTION' as const
+
+// Option 2: explicit cast
+evidenceType: 'E-INTERACTION' as EvidenceType
+
+// Option 3: use the enum
+evidenceType: EvidenceType.INTERACTION
+```
+
+**Rule:** When passing string literals that must match a Zod enum type, always use `as const` or explicit ` or ` or `as EvidenceType` to satisfy TypeScript's type narrowing.
+
+## 8. JUnit XML generator — avoid variable shadowing in map callbacks
+
+**Symptom:** TypeScript errors in `generateJUnitXML` about implicit `any` types for map callback parameters.
+
+**Root cause:** Variable shadowing in `for (const [suiteName, results] of results)` — the loop variable `results` shadows the outer `results` Map. Then `results.map(...)` uses the shadowed array, and TypeScript can't infer types for the map callback.
+
+**Fix:** Use distinct names:
+```ts
+for (const [suiteName, suiteResults] of results) {
+  const failures = suiteResults.filter(r => !r.passed).length;
+  // ...
+  const testcases = suiteResults.map((result: ConformanceResult, i: number) => {
+    // explicit types for callback params
+    if (result.passed) ...
+  });
+}
+```
+
+**Rule:** Never shadow a variable in a `for...of` loop that's also used outside the loop. Use distinct names (`suiteResults` vs `results`).
+
 ## Summary Table
 
 | Pitfall | Diagnostic | Fix |
@@ -101,3 +162,6 @@ Run with `pnpm test debug` to see the exact Zod issues (code, validation, messag
 | Cross-package import unresolvable | Dep built? In package.json? | `pnpm install` + build dep before consumer tests |
 | `write_file` truncation warning | "last read with pagination" guard | Re-read full file (no offset) before write |
 | Schema error unclear | Large test file, no signal | Minimal debug test with `console.log(issues)` |
+| Discriminated union strips unknown payload fields | Test passes when it should fail | Add `.strict()` to payload schemas |
+| TS literal not assignable to enum type | `'"E-INTERACTION"' not assignable to 'EvidenceType'` | Use `as const` or `as EvidenceType` |
+| JUnit XML callback implicit `any` | Variable shadowing in `for...of` | Don't shadow loop variable; use explicit types in callbacks |

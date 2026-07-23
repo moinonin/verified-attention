@@ -305,6 +305,8 @@ No coupling to a specific language, framework, or agent. The skill provides the 
 - `references/sprint-02-evidence-model-test-pattern.md` — worked example: Sprint 2 Evidence Model test writing (Generate→Read→Patch pattern + schema details)
 - `references/vae-sprint-runbooks-worked-example.md` — 20-sprint worked example from the Verified Attention Engine project
 - `references/typescript-monorepo-zod-test-pitfalls.md` — durable test-plumbing traps (Zod datetime precision, tsdown `.mjs`/`.js` exports, pnpm workspace cross-package resolution, `write_file` pagination guard, minimal reproducer debug pattern). Surfaces during ✎ mutate / ✓ verify on TS+Zod+pnpm stacks.
+- `references/zod-discriminated-union-test-pattern.md` — when testing Zod discriminated unions (e.g., VAP EvidencePayloadSchema), the discriminator field must match exactly; mismatched payload fields are correctly rejected. Test both valid combinations for each discriminator value AND mismatched combinations to verify the union correctly rejects them.
+- `references/tsdown-config-pattern.md` — for single-entry packages, tsdown.config.ts should specify `entry: ['src/index.ts']` (not an array of all source files). Multiple entries produce duplicate module outputs; tsdown handles re-exports from the single index.
 - `templates/stage-template.md` — blank stage template to copy when authoring a new plan
 - `templates/runbook-template.md` — blank runbook template (Layer 3, execution log)
 

@@ -9,9 +9,9 @@
 [34mℹ[39m tsconfig: [34mtsconfig.json[39m
 [34mℹ[39m Build start
 [34mℹ[39m Cleaning 4 files
-[34mℹ[39m [2mdist/[22m[1mindex.js[22m        [2m2.21 kB[22m [2m│ gzip: 0.87 kB[22m
-[34mℹ[39m [2mdist/[22mindex.js.map    [2m7.05 kB[22m [2m│ gzip: 2.36 kB[22m
-[34mℹ[39m [2mdist/[22mindex.d.ts.map  [2m1.07 kB[22m [2m│ gzip: 0.51 kB[22m
+[34mℹ[39m [2mdist/[22m[1mindex.js[22m        [2m2.26 kB[22m [2m│ gzip: 0.89 kB[22m
+[34mℹ[39m [2mdist/[22mindex.js.map    [2m7.16 kB[22m [2m│ gzip: 2.38 kB[22m
+[34mℹ[39m [2mdist/[22mindex.d.ts.map  [2m1.07 kB[22m [2m│ gzip: 0.50 kB[22m
 [34mℹ[39m [2mdist/[22m[32m[1mindex.d.ts[22m[39m      [2m3.42 kB[22m [2m│ gzip: 1.16 kB[22m
-[34mℹ[39m 4 files, total: 13.75 kB
-[32m✔[39m Build complete in [32m461ms[39m
+[34mℹ[39m 4 files, total: 13.92 kB
+[32m✔[39m Build complete in [32m471ms[39m

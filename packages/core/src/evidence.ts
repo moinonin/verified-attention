@@ -41,7 +41,7 @@ export const InteractionEvidencePayloadSchema = z.object({
     position: z.number()
   })).optional(),
   engagementScore: z.number().min(0).max(1).optional()
-});
+}).strict();
 
 export const VisibilityEvidencePayloadSchema = z.object({
   // Content visibility proof
@@ -52,7 +52,7 @@ export const VisibilityEvidencePayloadSchema = z.object({
     timestamp: z.number(),
     ratio: z.number().min(0).max(1)
   })).optional()
-});
+}).strict();
 
 export const DurationEvidencePayloadSchema = z.object({
   // Session duration evidence
@@ -61,7 +61,7 @@ export const DurationEvidencePayloadSchema = z.object({
   activeDurationMs: z.number().int(),
   idleDurationMs: z.number().int().optional(),
   heartbeatCount: z.number().int().optional()
-});
+}).strict();
 
 export const ContextEvidencePayloadSchema = z.object({
   // Environmental context
@@ -74,7 +74,7 @@ export const ContextEvidencePayloadSchema = z.object({
   // Connection info
   connectionType: z.string().optional(),
   effectiveType: z.string().optional()
-});
+}).strict();
 
 export const CustomEvidencePayloadSchema = z.record(z.unknown());
 

@@ -293,16 +293,16 @@ Session ID format: `urn:vap:session:<fragment_uuid>`.
 
 ## Session Context
 
-Context associated with a session includes the session participant() (the viewer), the content, the set of policies expected to be satisfied, whether observations have gathered).
+Context associated with a session includes the session participant (the viewer), the content, the set of policies expected to be satisfied, and whether observations have been gathered.
 
 ## Session Lifecycle
 
 Sessions are created by the viewer's client after consent. The client (from an SDK) begins recording observations into the session, then evidence is delivered gradually. As evidence accumulates a verification request may be scheduled.
 
-A session may be a the following states:
+A session may be in the following states:
 
 - `Created`: created but no evidence yet
-- `Active`: evidence_widgets being collected ; currently considered "attention in progress"
+- `Active`: evidence being collected; currently considered "attention in progress"
 - `Expired`: time limit reached without enough evidence
 - `Verified`: evidence sufficient and verification attempted
 - `Certified`: Proof + issued and final
@@ -393,7 +393,7 @@ Proof formats are serializable (JSON is recommended).
 
 ---
 
-# Protocol Messages
+# 11. Protocol Messages
 
 Implementations must support the following message types. Conformance to serialization format is OPTIONAL; conformance to the fields that these messages represent is MANDATORY.
 
@@ -424,7 +424,7 @@ When validation fails, an error response containing `cause` and `reason` must be
 
 ---
 
-# 11. Privacy Rules
+# 12. Privacy Rules
 
 The protocol REQUIRES utilization Privacy minimization — verifiers must not store raw sensor data beyond required.
 Consent is required from participant before evidence collection.
@@ -434,20 +434,20 @@ The Particle scheme must allow future zero-knowledge proofs.
 
 ---
 
-# 12. Extensions
+# 13. Extensions
 
 New evidence types, claims types, evaluators may be defined by public extension. Extensions must be registered with governance tracking.
 
 ---
 
-# 13. Versioning Policy
+# 14. Versioning Policy
 
 Backward compatibility for evidence types mandatory for minor versions.
 Deprecated notice must be given 1 version ahead.
 
 ---
 
-# 14. Conformance
+# 15. Conformance
 
 An implementation is VAP-compatible if it passes all validation tests. Certification test-harness publishes test result by verification at /cert.status.
 
@@ -474,7 +474,7 @@ S = { id, participant_hash, content_hash, created, status, state, evidence_ids }
 
 ---
 
-# Appendix B – State Mach Diagrams (pseudocratic)
+# Appendix B – State Machine Diagrams
 
 Evidence State Machine:
 ```
@@ -484,6 +484,7 @@ PROPOSED → REFINED → APPROVED (or DISCARDED)
 Session State Machine:
 ```
 CREATED → ACTIVE → EXPIRED|VERIFIED|CANCELLED
+                   VERIFIED → CERTIFIED|EXPIRED
 ```
 
 Proof State Machine:
@@ -499,9 +500,17 @@ UNSIGNED → SIGNED → EXPIRED
 # Verified attention scenario:
 Observer opens page → SDK (OBS recorded as OBS123→ submitted_to verifier)
 Verifier acknowledges → session starts → evidence stream sent →
-evidence_ analysis completes → verification pass → proof created
+evidence analysis completes → verification pass → proof created
 → proof signed → delivered to consumer
 ```
+
+---
+
+# Appendix D – Security Considerations
+
+- Replay Attacks: Must be mitigated using timestamps and nonce tracking.
+- Sybil Attacks: Sources MUST be rated for reliability.
+- Tampering: Evidence MUST be digitally signed at the source.
 
 ---
 

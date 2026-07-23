@@ -108,7 +108,7 @@ export enum SessionEventType {
  * Create a new session
  */
 export function createSession(
-  params: Omit<Session, 'sessionId' | 'startedAt' | 'state' | 'evidenceIds' | 'claimIds'>
+  params: Omit<Session, 'sessionId' | 'startedAt' | 'state' | 'evidenceIds' | 'claimIds'> & { timestamp?: string }
 ): Session {
   const now = new Date().toISOString();
   const { randomUUID } = require('crypto');
@@ -116,11 +116,11 @@ export function createSession(
   return {
     ...params,
     sessionId: `urn:vap:session:${randomUUID()}`,
-    startedAt: now,
+    startedAt: params.timestamp ?? now,
     state: 'CREATED' as SessionState,
     evidenceIds: [],
     claimIds: [],
-    lastActivityAt: now
+    lastActivityAt: params.timestamp ?? now
   };
 }
 
