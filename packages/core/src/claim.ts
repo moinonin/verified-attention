@@ -19,6 +19,7 @@ import {
   BaseMetadataSchema,
   zodIssuesToPlain
 } from './common';
+import { randomUUID } from 'crypto';
 
 /**
  * Claim lifecycle states (VAP Section 7)
@@ -97,7 +98,6 @@ export type ClaimValidationResult = z.infer<typeof ClaimValidationResultSchema>;
 export function createClaim(
   params: Omit<Claim, 'claimId' | 'state' | 'proposedAt'> & { proposedAt?: string }
 ): Claim {
-  const { randomUUID } = require('crypto');
   return {
     ...params,
     claimId: `urn:vap:claim:${randomUUID()}`,

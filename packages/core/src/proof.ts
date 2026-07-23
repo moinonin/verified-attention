@@ -9,7 +9,6 @@
 import { z } from 'zod';
 import {
   TimestampSchema,
-  UUIDSchema,
   SessionIdSchema,
   ProofIdSchema,
   ContentIdSchema,
@@ -20,6 +19,7 @@ import {
   BaseMetadataSchema,
   zodIssuesToPlain
 } from './common';
+import { randomUUID } from 'crypto';
 
 /**
  * Proof lifecycle states (VAP Section 10)
@@ -111,7 +111,6 @@ export type UnsignedProof = Omit<Proof, 'signature' | 'state' | 'issuedAt'> & {
 export function createUnsignedProof(
   params: Omit<Proof, 'proofId' | 'signature' | 'state' | 'issuedAt'>
 ): UnsignedProof {
-  const { randomUUID } = require('crypto');
   return {
     ...params,
     proofId: `urn:vap:proof:${randomUUID()}`,
@@ -199,7 +198,7 @@ export function validateProof(proof: unknown): ProofValidationResult {
   if (!result.success) {
     return {
       valid: false,
-      proofId: (proof as any)?.proofId ?? 'unknown',
+      proofId: (proof as { proofId?: string })?.proofId ?? 'unknown',
       errors: zodIssuesToPlain(result.error.issues)
     };
   }

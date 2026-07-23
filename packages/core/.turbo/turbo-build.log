@@ -4,7 +4,7 @@
 
 [34mℹ[39m tsdown [2mv0.11.13[22m powered by rolldown [2mv1.0.0-beta.9[22m
 [34mℹ[39m Using tsdown config: [4m/Users/nickrotich/Desktop/portfolio/projects/python/verified-attention/packages/core/tsdown.config.ts[24m
-(node:86111) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/nickrotich/Desktop/portfolio/projects/python/verified-attention/packages/core/tsdown.config.ts is not specified and it doesn't parse as CommonJS.
+(node:5033) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///Users/nickrotich/Desktop/portfolio/projects/python/verified-attention/packages/core/tsdown.config.ts is not specified and it doesn't parse as CommonJS.
 Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
 To eliminate this warning, add "type": "module" to /Users/nickrotich/Desktop/portfolio/projects/python/verified-attention/packages/core/package.json.
 (Use `node --trace-warnings ...` to show where the warning was created)
@@ -13,9 +13,9 @@ To eliminate this warning, add "type": "module" to /Users/nickrotich/Desktop/por
 [34mℹ[39m tsconfig: [34mtsconfig.json[39m
 [34mℹ[39m Build start
 [34mℹ[39m Cleaning 4 files
-[34mℹ[39m [2mdist/[22m[1mindex.mjs[22m        [2m 30.98 kB[22m [2m│ gzip:  7.04 kB[22m
-[34mℹ[39m [2mdist/[22mindex.mjs.map    [2m 54.62 kB[22m [2m│ gzip: 11.87 kB[22m
-[34mℹ[39m [2mdist/[22mindex.d.mts.map  [2m 47.48 kB[22m [2m│ gzip: 10.17 kB[22m
+[34mℹ[39m [2mdist/[22m[1mindex.mjs[22m        [2m 30.65 kB[22m [2m│ gzip:  6.96 kB[22m
+[34mℹ[39m [2mdist/[22mindex.mjs.map    [2m 54.45 kB[22m [2m│ gzip: 11.85 kB[22m
+[34mℹ[39m [2mdist/[22mindex.d.mts.map  [2m 47.50 kB[22m [2m│ gzip: 10.18 kB[22m
 [34mℹ[39m [2mdist/[22m[32m[1mindex.d.mts[22m[39m      [2m129.38 kB[22m [2m│ gzip: 10.92 kB[22m
-[34mℹ[39m 4 files, total: 262.47 kB
-[32m✔[39m Build complete in [32m1039ms[39m
+[34mℹ[39m 4 files, total: 261.99 kB
+[32m✔[39m Build complete in [32m892ms[39m

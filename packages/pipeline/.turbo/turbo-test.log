@@ -2,3 +2,15 @@
 > @verified-attention/pipeline@0.1.0-dev test /Users/nickrotich/Desktop/portfolio/projects/python/verified-attention/packages/pipeline
 > vitest run
 
+
+ RUN  v1.6.1 /Users/nickrotich/Desktop/portfolio/projects/python/verified-attention/packages/pipeline
+
+ ✓ src/normalization.test.ts  (34 tests) 6ms
+ ✓ src/validation.test.ts  (30 tests) 8ms
+ ✓ src/pipeline.test.ts  (18 tests) 7ms
+
+ Test Files  3 passed (3)
+      Tests  82 passed (82)
+   Start at  21:54:46
+   Duration  293ms (transform 123ms, setup 0ms, collect 244ms, tests 21ms, environment 0ms, prepare 168ms)
+

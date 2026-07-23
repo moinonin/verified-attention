@@ -5,9 +5,10 @@
 
  RUN  v1.6.1 /Users/nickrotich/Desktop/portfolio/projects/python/verified-attention/packages/store
 
-include: **/*.{test,spec}.?(c|m)[jt]s?(x)
-exclude:  **/node_modules/**, **/dist/**, **/cypress/**, **/.{idea,git,cache,output,temp}/**, **/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build,eslint,prettier}.config.*
-watch exclude:  **/node_modules/**, **/dist/**
+ ✓ src/evidence-store.test.ts  (23 tests) 5ms
 
-No test files found, exiting with code 1
- ELIFECYCLE  Test failed. See above for more details.
+ Test Files  1 passed (1)
+      Tests  23 passed (23)
+   Start at  21:54:45
+   Duration  195ms (transform 33ms, setup 0ms, collect 35ms, tests 5ms, environment 0ms, prepare 42ms)
+

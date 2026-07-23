@@ -3,8 +3,7 @@
  * Provides test runner, fixtures, and assertions for VAP conformance testing
  */
 
-import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
-import { z } from 'zod';
+import type { z } from 'zod';
 
 // ─── Types ──────────────────────────────────────────────────────────────
 
@@ -38,23 +37,23 @@ export interface TestFixture<T> {
 export interface TestSuiteConfig {
   name: string;
   description: string;
-  fixtures: TestFixture<any>[];
+  fixtures: TestFixture<unknown>[];
   validate: (input: unknown) => ConformanceResult;
 }
 
 // ─── Core Assertions ────────────────────────────────────────────────────
 
-export function assertConforms<T>(
+export function assertConforms(
   result: ConformanceResult,
   message?: string
 ): void {
   if (!result.passed) {
     const errorMsg = result.errors.map(e => `${e.code}: ${e.message}`).join('\n');
-    throw new Error(`${message || 'Conformance failed'}:\n${errorMsg}`);
+    throw new Error(`${message || 'Conformance failed'}:\\n${errorMsg}`);
   }
 }
 
-export function assertNotConforms<T>(
+export function assertNotConforms(
   result: ConformanceResult,
   message?: string
 ): void {
@@ -166,15 +165,15 @@ export class ConformanceRunner {
 export function generateJUnitXML(results: Map<string, ConformanceResult[]>): string {
   let totalTests = 0;
   let totalFailures = 0;
-  let totalErrors = 0;
-  let totalTime = 0;
+  const totalErrors = 0;
+  const totalTime = 0;
 
   const testsuites: string[] = [];
 
   for (const [suiteName, suiteResults] of results) {
     const failures = suiteResults.filter(r => !r.passed).length;
     const tests = suiteResults.length;
-    
+
     totalTests += tests;
     totalFailures += failures;
 
@@ -183,21 +182,14 @@ export function generateJUnitXML(results: Map<string, ConformanceResult[]>): str
         return `    <testcase name="test_${i}" classname="${suiteName}" time="0.001"/>`;
       } else {
         const errorMessages = result.errors.map((e: ConformanceError) => `${e.code}: ${e.message}`).join('\n');
-        return `    <testcase name="test_${i}" classname="${suiteName}" time="0.001">
-      <failure message="Conformance failed">${errorMessages}</failure>
-    </testcase>`;
+        return `    <testcase name="test_${i}" classname="${suiteName}" time="0.001">\n      <failure message="Conformance failed">${errorMessages}</failure>\n    </testcase>`;
       }
     }).join('\n');
 
-    testsuites.push(`  <testsuite name="${suiteName}" tests="${tests}" failures="${failures}" errors="0" time="0">
-${testcases}
-  </testsuite>`);
+    testsuites.push(`  <testsuite name="${suiteName}" tests="${tests}" failures="${failures}" errors="0" time="0">\n${testcases}\n  </testsuite>`);
   }
 
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="VAP Conformance" tests="${totalTests}" failures="${totalFailures}" errors="${totalErrors}" time="${totalTime.toFixed(3)}">
-${testsuites.join('\n')}
-</testsuites>`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<testsuites name="VAP Conformance" tests="${totalTests}" failures="${totalFailures}" errors="${totalErrors}" time="${totalTime.toFixed(3)}">\n${testsuites.join('\n')}\n</testsuites>`;
 }
 
 // ─── Fixture Helpers ────────────────────────────────────────────────────

@@ -6,15 +6,15 @@
  */
 
 import { z } from 'zod';
-import { 
-  TimestampSchema, 
-  UUIDSchema, 
-  SessionIdSchema, 
-  ContentIdSchema, 
+import {
+  TimestampSchema,
+  SessionIdSchema,
+  ContentIdSchema,
   SourceIdSchema,
   SessionStateSchema as SessionStateSchemaImport,
   EvidenceIdSchema
 } from './common';
+import { randomUUID } from 'crypto';
 
 // Re-export SessionState type from common
 export type SessionState = z.infer<typeof SessionStateSchemaImport>;
@@ -111,8 +111,7 @@ export function createSession(
   params: Omit<Session, 'sessionId' | 'startedAt' | 'state' | 'evidenceIds' | 'claimIds'> & { timestamp?: string }
 ): Session {
   const now = new Date().toISOString();
-  const { randomUUID } = require('crypto');
-  
+
   return {
     ...params,
     sessionId: `urn:vap:session:${randomUUID()}`,

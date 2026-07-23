@@ -13,8 +13,7 @@ import {
   SessionIdSchema, 
   ContentIdSchema, 
   SourceIdSchema,
-  SignalTypeSchema,
-  HashSchema
+  SignalTypeSchema
 } from './common';
 import { randomUUID } from 'crypto';
 
