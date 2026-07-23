@@ -139,7 +139,10 @@ export class InMemoryEvidenceStore implements EvidenceStore {
     const entries = Array.from(this._records.values());
     const limit = pageSize ?? entries.length;
     for (let i = 0; i < Math.min(entries.length, limit); i++) {
-      yield entries[i];
+      const entry = entries[i];
+      if (entry !== undefined) {
+        yield entry;
+      }
     }
   }
 }

@@ -261,6 +261,7 @@ When the project uses Python for any backend work:
 2. **Venv precondition**: Every runbook MUST include a precondition `test -d .venv && .venv/bin/python --version`. If false, the FIRST command in Stage A creates it: `python3 -m venv .venv` (or `python3.11 -m venv .venv` if a specific version is required).
 3. **No cross-command activation**: If a script sources `. .venv/bin/activate`, the activation MUST happen in the same shell invocation that runs Python. Do NOT assume activation persists across commands.
 4. **Venv relocation hazard**: If a `.venv` was created at a different path and moved/copied, its `pyvenv.cfg` and bin shebangs will point to the old location — pip will break. Recreate the venv fresh at the current project path.
+5. **Preferred Python version**: When available, prefer `python3.11` (or project-specified version) for venv creation over system `python3` to ensure consistent minor version across team members.
 
 ## Make Targets For Backend Entrypoints
 

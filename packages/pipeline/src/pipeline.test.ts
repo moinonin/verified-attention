@@ -79,7 +79,7 @@ describe('NormalizationStage', () => {
   it('should pass through valid evidence', async () => {
     const stage = new NormalizationStage();
     const ctx = { sessionId: VALID_SESSION_ID, sessionState: 'ACTIVE', replayCache: new InMemoryReplayCache() };
-    const result = await stage.process({ ok: true, evidence: makeEvidence() } as any, ctx);
+    const result = await stage.process({ ok: true, value: makeEvidence() }, ctx);
     expect(result.ok).toBe(true);
   });
 
@@ -87,9 +87,9 @@ describe('NormalizationStage', () => {
     const stage = new NormalizationStage();
     const ctx = { sessionId: VALID_SESSION_ID, sessionState: 'ACTIVE', replayCache: new InMemoryReplayCache() };
     const evidence = makeEvidence({ timestamp: Date.now() });
-    const result = await stage.process({ ok: true, evidence } as any, ctx);
+    const result = await stage.process({ ok: true, value: evidence }, ctx);
     expect(result.ok).toBe(true);
-    expect(typeof (result as any).evidence.timestamp).toBe('string');
+    expect(typeof (result as any).value.timestamp).toBe('string');
   });
 });
 
@@ -106,7 +106,7 @@ describe('StoreStage', () => {
     const store = new InMemoryEvidenceStore();
     const stage = new StoreStage(store);
     const ctx = { sessionId: VALID_SESSION_ID, sessionState: 'ACTIVE', replayCache: new InMemoryReplayCache() };
-    const result = await stage.process({ ok: true, evidence: makeEvidence() } as any, ctx);
+    const result = await stage.process({ ok: true, value: makeEvidence() }, ctx);
     expect(result.ok).toBe(true);
     expect(await store.count()).toBe(1);
   });
@@ -116,7 +116,7 @@ describe('StoreStage', () => {
     await store.append(makeEvidence() as any);
     const stage = new StoreStage(store);
     const ctx = { sessionId: VALID_SESSION_ID, sessionState: 'ACTIVE', replayCache: new InMemoryReplayCache() };
-    const result = await stage.process({ ok: true, evidence: makeEvidence() } as any, ctx);
+    const result = await stage.process({ ok: true, value: makeEvidence() }, ctx);
     expect(result.ok).toBe(false);
   });
 });

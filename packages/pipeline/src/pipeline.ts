@@ -23,7 +23,7 @@ import {
 /**
  * Pipeline stage interfaces
  */
-export interface Stage<TIn, TOut> {
+export interface Stage<TIn, TOut extends { ok: boolean }> {
   name: string;
   process(input: TIn, ctx: PipelineContext): Promise<TOut>;
 }
@@ -35,13 +35,17 @@ export interface PipelineContext {
   timestampConstraints?: Partial<TimestampConstraints>;
 }
 
+export type StageResult<T> = 
+  | { ok: true; value: T }
+  | { ok: false; errors: Array<{ code: string; message: string }> };
+
 /**
  * Validation stage: schema + timestamp + session binding + replay protection
  */
-export class ValidationStage implements Stage<unknown, { ok: true; evidence: any } | { ok: false; errors: any[] }> {
+export class ValidationStage implements Stage<unknown, StageResult<any>> {
   readonly name = 'ValidationStage';
 
-  async process(input: unknown, ctx: PipelineContext) {
+  async process(input: unknown, ctx: PipelineContext): Promise<StageResult<any>> {
     // Replay check
     const evidenceId = (input as any)?.evidenceId;
     if (evidenceId && await ctx.replayCache.has(evidenceId)) {
@@ -63,40 +67,44 @@ export class ValidationStage implements Stage<unknown, { ok: true; evidence: any
     // Mark as seen
     if (evidenceId) await ctx.replayCache.add(evidenceId);
 
-    return { ok: true as const, evidence: input };
+    return { ok: true, value: input };
   }
 }
 
 /**
  * Normalization stage: platform-specific → canonical (pass-through for already canonical)
  */
-export class NormalizationStage implements Stage<{ ok: true; evidence: any }, { ok: true; evidence: any } | { ok: false; errors: any[] }> {
+export class NormalizationStage implements Stage<StageResult<any>, StageResult<any>> {
   readonly name = 'NormalizationStage';
 
-  async process(input: { ok: true; evidence: any }, _ctx: PipelineContext) {
-    const evidence = input.evidence;
-    // Normalize timestamp if numeric
-    if (typeof evidence.timestamp === 'number') {
-      evidence.timestamp = normalizeTimestamp(evidence.timestamp);
-    }
-    return { ok: true as const, evidence };
+  async process(input: StageResult<any>, _ctx: PipelineContext): Promise<StageResult<any>> {
+    if (!input.ok) return input;
+    
+    const evidence = input.value;
+    // Normalize timestamp if numeric (create new object to avoid mutation)
+    const normalizedEvidence = typeof evidence.timestamp === 'number'
+      ? { ...evidence, timestamp: normalizeTimestamp(evidence.timestamp) }
+      : evidence;
+    return { ok: true, value: normalizedEvidence };
   }
 }
 
 /**
  * Store stage: persist to append-only store
  */
-export class StoreStage implements Stage<{ ok: true; evidence: any }, { ok: true; stored: boolean } | { ok: false; errors: any[] }> {
+export class StoreStage implements Stage<StageResult<any>, StageResult<boolean>> {
   readonly name = 'StoreStage';
 
   constructor(private store: { append(e: any): Promise<void> }) {}
 
-  async process(input: { ok: true; evidence: any }, _ctx: PipelineContext) {
+  async process(input: StageResult<any>, _ctx: PipelineContext): Promise<StageResult<boolean>> {
+    if (!input.ok) return input;
+    
     try {
-      await this.store.append(input.evidence);
-      return { ok: true as const, stored: true };
+      await this.store.append(input.value);
+      return { ok: true, value: true };
     } catch (err: any) {
-      return { ok: false as const, errors: [{ code: 'STORE_ERROR', message: err.message }] };
+      return { ok: false, errors: [{ code: 'STORE_ERROR', message: err.message }] };
     }
   }
 }
@@ -132,20 +140,20 @@ export class Pipeline {
     // Stage 1: validation
     const vResult = await this.validation.process(input, fullCtx);
     if (!vResult.ok) {
-      return { stage: 'validation', ok: false, errors: (vResult as any).errors };
+      return { stage: 'validation', ok: false, errors: vResult.errors };
     }
 
     // Stage 2: normalization
-    const nResult = await this.normalization.process(vResult as any, fullCtx);
+    const nResult = await this.normalization.process(vResult, fullCtx);
     if (!nResult.ok) {
-      return { stage: 'normalization', ok: false, errors: (nResult as any).errors };
+      return { stage: 'normalization', ok: false, errors: nResult.errors };
     }
 
     // Stage 3: store (optional)
     if (this.storeStage) {
-      const sResult = await this.storeStage.process(nResult as any, fullCtx);
+      const sResult = await this.storeStage.process(nResult, fullCtx);
       if (!sResult.ok) {
-        return { stage: 'store', ok: false, errors: (sResult as any).errors };
+        return { stage: 'store', ok: false, errors: sResult.errors };
       }
       return { stage: 'store', ok: true, evidenceId: (input as any).evidenceId };
     }

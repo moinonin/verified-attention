@@ -1,0 +1,104 @@
+{
+  "auc": 1.0,
+  "feature_importance": [
+    {
+      "feature": "device_consistency",
+      "importance": 0.225339144888436
+    },
+    {
+      "feature": "keypress_count",
+      "importance": 0.1786080356937142
+    },
+    {
+      "feature": "sensor_noise",
+      "importance": 0.15159870793656896
+    },
+    {
+      "feature": "timing_entropy",
+      "importance": 0.13046617015999498
+    },
+    {
+      "feature": "user_agent_entropy",
+      "importance": 0.08730686745819113
+    },
+    {
+      "feature": "max_visibility_ratio",
+      "importance": 0.05752931054081628
+    },
+    {
+      "feature": "avg_visibility_ratio",
+      "importance": 0.046474390059908714
+    },
+    {
+      "feature": "mouse_movement_score",
+      "importance": 0.03275084627542626
+    },
+    {
+      "feature": "evidence_duplicate",
+      "importance": 0.02383526575102743
+    },
+    {
+      "feature": "click_count",
+      "importance": 0.019850936022223955
+    },
+    {
+      "feature": "provenance_hash_match",
+      "importance": 0.01983318802239815
+    },
+    {
+      "feature": "scroll_direction_changes",
+      "importance": 0.01427849241322885
+    },
+    {
+      "feature": "click_interval_cv",
+      "importance": 0.006854414970961399
+    },
+    {
+      "feature": "visible_duration_ms",
+      "importance": 0.0024277693726344534
+    },
+    {
+      "feature": "avg_scroll_velocity",
+      "importance": 0.001197762371956391
+    },
+    {
+      "feature": "heartbeat_interval_cv",
+      "importance": 0.001087910452383138
+    },
+    {
+      "feature": "idle_duration_ms",
+      "importance": 0.0001753527403436512
+    },
+    {
+      "feature": "session_duration_ms",
+      "importance": 0.00011657702913688968
+    },
+    {
+      "feature": "heartbeat_count",
+      "importance": 9.736460472723854e-05
+    },
+    {
+      "feature": "active_duration_ms",
+      "importance": 7.842354740055805e-05
+    },
+    {
+      "feature": "interaction_duration_ms",
+      "importance": 6.637251096251941e-05
+    },
+    {
+      "feature": "platform_desktop",
+      "importance": 1.5091189143647029e-05
+    },
+    {
+      "feature": "platform_browser",
+      "importance": 9.665813103878878e-06
+    },
+    {
+      "feature": "platform_mobile",
+      "importance": 1.9401753112218955e-06
+    }
+  ],
+  "n_samples": 10000,
+  "fraud_rate": 0.156,
+  "timestamp": "2026-07-23T17:25:05.366448"
+}

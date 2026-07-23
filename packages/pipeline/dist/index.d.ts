@@ -127,7 +127,9 @@ declare function meetsMinimumSpan(observations: Observation[], minSpanMs: number
 /**
  * Pipeline stage interfaces
  */
-interface Stage<TIn, TOut> {
+interface Stage<TIn, TOut extends {
+  ok: boolean;
+}> {
   name: string;
   process(input: TIn, ctx: PipelineContext): Promise<TOut>;
 }
@@ -137,82 +139,40 @@ interface PipelineContext {
   replayCache: ReplayCache;
   timestampConstraints?: Partial<TimestampConstraints>;
 }
+type StageResult<T> = {
+  ok: true;
+  value: T;
+} | {
+  ok: false;
+  errors: Array<{
+    code: string;
+    message: string;
+  }>;
+};
 /**
  * Validation stage: schema + timestamp + session binding + replay protection
  */
-declare class ValidationStage implements Stage<unknown, {
-  ok: true;
-  evidence: any;
-} | {
-  ok: false;
-  errors: any[];
-}> {
+declare class ValidationStage implements Stage<unknown, StageResult<any>> {
   readonly name = "ValidationStage";
-  process(input: unknown, ctx: PipelineContext): Promise<{
-    ok: boolean;
-    errors: any;
-    evidence?: undefined;
-  } | {
-    ok: true;
-    evidence: unknown;
-    errors?: undefined;
-  }>;
+  process(input: unknown, ctx: PipelineContext): Promise<StageResult<any>>;
 }
 /**
  * Normalization stage: platform-specific → canonical (pass-through for already canonical)
  */
-declare class NormalizationStage implements Stage<{
-  ok: true;
-  evidence: any;
-}, {
-  ok: true;
-  evidence: any;
-} | {
-  ok: false;
-  errors: any[];
-}> {
+declare class NormalizationStage implements Stage<StageResult<any>, StageResult<any>> {
   readonly name = "NormalizationStage";
-  process(input: {
-    ok: true;
-    evidence: any;
-  }, _ctx: PipelineContext): Promise<{
-    ok: true;
-    evidence: any;
-  }>;
+  process(input: StageResult<any>, _ctx: PipelineContext): Promise<StageResult<any>>;
 }
 /**
  * Store stage: persist to append-only store
  */
-declare class StoreStage implements Stage<{
-  ok: true;
-  evidence: any;
-}, {
-  ok: true;
-  stored: boolean;
-} | {
-  ok: false;
-  errors: any[];
-}> {
+declare class StoreStage implements Stage<StageResult<any>, StageResult<boolean>> {
   private store;
   readonly name = "StoreStage";
   constructor(store: {
     append(e: any): Promise<void>;
   });
-  process(input: {
-    ok: true;
-    evidence: any;
-  }, _ctx: PipelineContext): Promise<{
-    ok: true;
-    stored: boolean;
-    errors?: undefined;
-  } | {
-    ok: false;
-    errors: {
-      code: string;
-      message: any;
-    }[];
-    stored?: undefined;
-  }>;
+  process(input: StageResult<any>, _ctx: PipelineContext): Promise<StageResult<boolean>>;
 }
 /**
  * Full pipeline: validation → normalization → store
@@ -240,5 +200,5 @@ interface PipelineResult {
  */
 
 //#endregion
-export { DEFAULT_TIMESTAMP_CONSTRAINTS, InMemoryReplayCache, NormalizationStage, Pipeline, PipelineContext, PipelineResult, Platform, ReplayCache, Stage, StoreStage, TimestampConstraints, ValidationErrorCode, ValidationResult, ValidationStage, aggregateInteractionEvidence, aggregateVisibilityEvidence, meetsMinimumSpan, normalizeBrowserClick, normalizeBrowserFocus, normalizeBrowserKeypress, normalizeBrowserScroll, normalizeDeviceMotion, normalizeTimestamp, normalizeViewportVisibility, validateAgainstSession, validateEvidence };
+export { DEFAULT_TIMESTAMP_CONSTRAINTS, InMemoryReplayCache, NormalizationStage, Pipeline, PipelineContext, PipelineResult, Platform, ReplayCache, Stage, StageResult, StoreStage, TimestampConstraints, ValidationErrorCode, ValidationResult, ValidationStage, aggregateInteractionEvidence, aggregateVisibilityEvidence, meetsMinimumSpan, normalizeBrowserClick, normalizeBrowserFocus, normalizeBrowserKeypress, normalizeBrowserScroll, normalizeDeviceMotion, normalizeTimestamp, normalizeViewportVisibility, validateAgainstSession, validateEvidence };
 //# sourceMappingURL=index.d.ts.map

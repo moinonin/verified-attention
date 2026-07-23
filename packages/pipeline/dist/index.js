@@ -269,7 +269,7 @@ var ValidationStage = class {
 		if (evidenceId) await ctx.replayCache.add(evidenceId);
 		return {
 			ok: true,
-			evidence: input
+			value: input
 		};
 	}
 };
@@ -279,11 +279,15 @@ var ValidationStage = class {
 var NormalizationStage = class {
 	name = "NormalizationStage";
 	async process(input, _ctx) {
-		const evidence = input.evidence;
-		if (typeof evidence.timestamp === "number") evidence.timestamp = normalizeTimestamp(evidence.timestamp);
+		if (!input.ok) return input;
+		const evidence = input.value;
+		const normalizedEvidence = typeof evidence.timestamp === "number" ? {
+			...evidence,
+			timestamp: normalizeTimestamp(evidence.timestamp)
+		} : evidence;
 		return {
 			ok: true,
-			evidence
+			value: normalizedEvidence
 		};
 	}
 };
@@ -296,11 +300,12 @@ var StoreStage = class {
 		this.store = store;
 	}
 	async process(input, _ctx) {
+		if (!input.ok) return input;
 		try {
-			await this.store.append(input.evidence);
+			await this.store.append(input.value);
 			return {
 				ok: true,
-				stored: true
+				value: true
 			};
 		} catch (err) {
 			return {

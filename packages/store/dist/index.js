@@ -39,7 +39,10 @@ var InMemoryEvidenceStore = class {
 	async *iterate(_pages = 100, pageSize) {
 		const entries = Array.from(this._records.values());
 		const limit = pageSize ?? entries.length;
-		for (let i = 0; i < Math.min(entries.length, limit); i++) yield entries[i];
+		for (let i = 0; i < Math.min(entries.length, limit); i++) {
+			const entry = entries[i];
+			if (entry !== void 0) yield entry;
+		}
 	}
 };
 /**

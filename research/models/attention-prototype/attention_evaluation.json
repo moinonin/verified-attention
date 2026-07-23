@@ -1,0 +1,71 @@
+{
+  "auc": 0.999996414845408,
+  "feature_importance": [
+    {
+      "feature": "keypress_count",
+      "importance": 0.36004092494421114
+    },
+    {
+      "feature": "engagement_score",
+      "importance": 0.2464849812150774
+    },
+    {
+      "feature": "max_visibility_ratio",
+      "importance": 0.1542428133125212
+    },
+    {
+      "feature": "avg_visibility_ratio",
+      "importance": 0.10997668868065827
+    },
+    {
+      "feature": "scroll_direction_changes",
+      "importance": 0.053046622904573494
+    },
+    {
+      "feature": "click_count",
+      "importance": 0.050916195040204795
+    },
+    {
+      "feature": "visible_duration_ms",
+      "importance": 0.019734657075189288
+    },
+    {
+      "feature": "avg_scroll_velocity",
+      "importance": 0.003185270495706859
+    },
+    {
+      "feature": "active_duration_ms",
+      "importance": 0.0007457421723883924
+    },
+    {
+      "feature": "idle_duration_ms",
+      "importance": 0.00041843447616185867
+    },
+    {
+      "feature": "heartbeat_count",
+      "importance": 0.000406243885819268
+    },
+    {
+      "feature": "session_duration_ms",
+      "importance": 0.00036618359969507963
+    },
+    {
+      "feature": "interaction_duration_ms",
+      "importance": 0.00032870123495120046
+    },
+    {
+      "feature": "platform_browser",
+      "importance": 6.759700620775307e-05
+    },
+    {
+      "feature": "platform_mobile",
+      "importance": 1.96856324637992e-05
+    },
+    {
+      "feature": "platform_desktop",
+      "importance": 1.925832417030927e-05
+    }
+  ],
+  "n_samples": 10000,
+  "timestamp": "2026-07-23T17:23:18.824995"
+}
