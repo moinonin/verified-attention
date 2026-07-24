@@ -15,7 +15,7 @@ build/
 .mypy_cache/
 .dmypy.json
 dmypy.json
-
+githeri/.venv/
 # Node.js
 node_modules/
 npm-debug.log*
