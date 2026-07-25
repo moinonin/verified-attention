@@ -5,12 +5,12 @@
 
  RUN  v1.6.1 /Users/nickrotich/Desktop/portfolio/projects/python/verified-attention/packages/pipeline
 
- ✓ src/normalization.test.ts  (34 tests) 6ms
+ ✓ src/normalization.test.ts  (34 tests) 5ms
  ✓ src/validation.test.ts  (30 tests) 8ms
  ✓ src/pipeline.test.ts  (18 tests) 7ms
 
  Test Files  3 passed (3)
       Tests  82 passed (82)
-   Start at  21:54:46
-   Duration  293ms (transform 123ms, setup 0ms, collect 244ms, tests 21ms, environment 0ms, prepare 168ms)
+   Start at  18:19:48
+   Duration  277ms (transform 114ms, setup 0ms, collect 182ms, tests 20ms, environment 0ms, prepare 170ms)
 

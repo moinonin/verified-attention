@@ -64,5 +64,86 @@ function createEvidenceStore(options) {
 }
 
 //#endregion
-export { EvidenceStoreError, InMemoryEvidenceStore, createEvidenceStore };
+//#region src/proof-store.ts
+/**
+* In-memory append-only proof store.
+* Replace with persistent storage (Prisma, SQLite, etc.) in production.
+*/
+const proofStore = new Map();
+const sessionIndex = new Map();
+const contentIndex = new Map();
+let monotonicCounter = 0;
+/**
+* Store a signed proof. Append-only — rejects duplicate proofId.
+*
+* @throws Error if a proof with the same proofId already exists
+*/
+function storeProof(proof) {
+	if (proofStore.has(proof.proofId)) throw new Error(`PROOF_EXISTS: proof with id ${proof.proofId} already stored (append-only)`);
+	const stored = Object.freeze({
+		proof: Object.freeze({ ...proof }),
+		storedAt: new Date().toISOString(),
+		storageIndex: monotonicCounter++
+	});
+	proofStore.set(proof.proofId, stored);
+	const sessionProofs = sessionIndex.get(proof.sessionId) ?? [];
+	sessionProofs.push(proof.proofId);
+	sessionIndex.set(proof.sessionId, sessionProofs);
+	const contentProofs = contentIndex.get(proof.contentId) ?? [];
+	contentProofs.push(proof.proofId);
+	contentIndex.set(proof.contentId, contentProofs);
+	return stored;
+}
+/**
+* Retrieve a proof by its proofId.
+*
+* @returns the stored proof with metadata, or undefined if not found
+*/
+function getProofById(proofId) {
+	return proofStore.get(proofId);
+}
+/**
+* List all proofs for a given sessionId, ordered by issuedAt descending.
+*
+* @returns array of stored proofs for the session
+*/
+function listProofsBySession(sessionId) {
+	const proofIds = sessionIndex.get(sessionId) ?? [];
+	return proofIds.map((id) => proofStore.get(id)).filter((p) => p !== void 0).sort((a, b) => {
+		const timeA = new Date(a.proof.issuedAt).getTime();
+		const timeB = new Date(b.proof.issuedAt).getTime();
+		return timeB - timeA;
+	});
+}
+/**
+* List all proofs for a given contentId.
+*
+* @returns array of stored proofs for the content
+*/
+function listProofsByContent(contentId) {
+	const proofIds = contentIndex.get(contentId) ?? [];
+	return proofIds.map((id) => proofStore.get(id)).filter((p) => p !== void 0).sort((a, b) => {
+		const timeA = new Date(a.proof.issuedAt).getTime();
+		const timeB = new Date(b.proof.issuedAt).getTime();
+		return timeB - timeA;
+	});
+}
+/**
+* Get the total count of stored proofs.
+*/
+function getProofCount() {
+	return proofStore.size;
+}
+/**
+* Clear the store (for testing only — never expose in production).
+*/
+function _clearStore() {
+	proofStore.clear();
+	sessionIndex.clear();
+	contentIndex.clear();
+	monotonicCounter = 0;
+}
+
+//#endregion
+export { EvidenceStoreError, InMemoryEvidenceStore, _clearStore, createEvidenceStore, getProofById, getProofCount, listProofsByContent, listProofsBySession, storeProof };
 //# sourceMappingURL=index.js.map

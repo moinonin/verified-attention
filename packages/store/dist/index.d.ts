@@ -1,4 +1,7 @@
+import { Proof } from "@verified-attention/core";
+
 //#region src/evidence-store.d.ts
+
 /**
  * Append-only evidence store (VAP Section 3)
  *
@@ -97,5 +100,49 @@ interface EvidenceStoreOptions {
 }
 //# sourceMappingURL=evidence-store.d.ts.map
 //#endregion
-export { EvidenceId, EvidenceStore, EvidenceStoreError, EvidenceStoreOptions, InMemoryEvidenceStore, SessionId, StoredEvidence, createEvidenceStore };
+//#region src/proof-store.d.ts
+/**
+ * Stored proof with storage metadata.
+ */
+interface StoredProof {
+  readonly proof: Proof;
+  readonly storedAt: string;
+  readonly storageIndex: number;
+}
+/**
+ * Store a signed proof. Append-only — rejects duplicate proofId.
+ *
+ * @throws Error if a proof with the same proofId already exists
+ */
+declare function storeProof(proof: Proof): StoredProof;
+/**
+ * Retrieve a proof by its proofId.
+ *
+ * @returns the stored proof with metadata, or undefined if not found
+ */
+declare function getProofById(proofId: string): StoredProof | undefined;
+/**
+ * List all proofs for a given sessionId, ordered by issuedAt descending.
+ *
+ * @returns array of stored proofs for the session
+ */
+declare function listProofsBySession(sessionId: string): StoredProof[];
+/**
+ * List all proofs for a given contentId.
+ *
+ * @returns array of stored proofs for the content
+ */
+declare function listProofsByContent(contentId: string): StoredProof[];
+/**
+ * Get the total count of stored proofs.
+ */
+declare function getProofCount(): number;
+/**
+ * Clear the store (for testing only — never expose in production).
+ */
+declare function _clearStore(): void;
+//# sourceMappingURL=proof-store.d.ts.map
+
+//#endregion
+export { EvidenceId, EvidenceStore, EvidenceStoreError, EvidenceStoreOptions, InMemoryEvidenceStore, SessionId, StoredEvidence, StoredProof, _clearStore, createEvidenceStore, getProofById, getProofCount, listProofsByContent, listProofsBySession, storeProof };
 //# sourceMappingURL=index.d.ts.map

@@ -19,7 +19,8 @@ import {
   BaseMetadataSchema,
   zodIssuesToPlain
 } from './common';
-import { randomUUID } from 'crypto';
+import type { Hash } from './common';
+import { randomUUID, createHash } from 'crypto';
 
 /**
  * Proof lifecycle states (VAP Section 10)
@@ -219,4 +220,31 @@ export function isProofExpired(proof: Proof): boolean {
  */
 export function isProofValid(proof: Proof): boolean {
   return proof.state === ProofState.PUBLISHED && !isProofExpired(proof);
+}
+
+/**
+ * Serialize a proof to canonical JSON.
+ * Keys are sorted to ensure deterministic output regardless of insertion order.
+ * Works for both Proof and UnsignedProof.
+ */
+export function serializeProof(proof: Proof | UnsignedProof): string {
+  return JSON.stringify(proof, Object.keys(proof).sort());
+}
+
+/**
+ * Compute deterministic SHA-256 hash over the 7 mandatory proof fields.
+ * Excludes state, timestamps, and metadata — only identity and content fields.
+ * VAP: sha256(proofId + sessionId + contentId + confidence + evidenceHash + verifierId + signature)
+ */
+export function computeProofHash(proof: Proof | UnsignedProof): Hash {
+  const data = JSON.stringify({
+    proofId: proof.proofId,
+    sessionId: proof.sessionId,
+    contentId: proof.contentId,
+    confidence: proof.confidence,
+    evidenceHash: proof.evidenceHash,
+    verifierId: proof.verifierId,
+    signature: (proof as Proof).signature ?? ''
+  }, null, 0);
+  return createHash('sha256').update(data).digest('hex') as Hash;
 }

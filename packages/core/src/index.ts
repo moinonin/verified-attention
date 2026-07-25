@@ -176,7 +176,9 @@ export {
   transitionProofState,
   validateProof,
   isProofExpired,
-  isProofValid
+  isProofValid,
+  serializeProof,
+  computeProofHash
 } from './proof';
 
 // Protocol Messages

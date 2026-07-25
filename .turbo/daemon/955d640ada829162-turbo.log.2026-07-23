@@ -350,3 +350,73 @@
 2026-07-23T16:47:13.945988Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
 2026-07-23T16:47:32.746318Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/conformance/tests/.hermes-tmp.Ys0PUY"), AnchoredSystemPathBuf("packages/conformance/tests/session-conformance.test.ts")}
 2026-07-23T16:47:32.746327Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T21:12:15.903139Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src"), AnchoredSystemPathBuf("packages/verification/package.json"), AnchoredSystemPathBuf("packages/verification")}
+2026-07-23T21:12:15.903216Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T21:12:35.599303Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/tsconfig.json"), AnchoredSystemPathBuf("packages/verification/tsdown.config.ts")}
+2026-07-23T21:12:35.599312Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T21:13:04.600251Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/outcomes.ts"), AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.602S4D")}
+2026-07-23T21:13:04.600263Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T21:14:00.799642Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/confidence.ts"), AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.Llx0cE")}
+2026-07-23T21:14:00.799652Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T21:14:13.499383Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.uj8qRD"), AnchoredSystemPathBuf("packages/verification/src/confidence.ts")}
+2026-07-23T21:14:13.499392Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T21:29:17.705264Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/confidence.ts"), AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.a8W2NN")}
+2026-07-23T21:29:17.705292Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T21:30:11.805047Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/confidence.ts"), AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.KMYAlh")}
+2026-07-23T21:30:11.805057Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T21:32:36.705587Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.pQMACv"), AnchoredSystemPathBuf("packages/verification/src/policy.ts")}
+2026-07-23T21:32:36.705597Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T21:47:13.379551Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.s6U9t5"), AnchoredSystemPathBuf("packages/verification/src/engine.ts")}
+2026-07-23T21:47:13.379574Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T21:49:07.683738Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf(""), AnchoredSystemPathBuf("_tmp_36666_3599ffb713d4e3373fd09d75235cd818")}
+2026-07-23T21:49:07.683749Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T21:49:08.778733Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/node_modules"), AnchoredSystemPathBuf("pnpm-lock.yaml"), AnchoredSystemPathBuf("pnpm-lock.yaml.1658924698")}
+2026-07-23T21:49:08.778744Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T21:52:35.577821Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/engine.ts"), AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.xnmLwB")}
+2026-07-23T21:52:35.577833Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T21:56:25.878311Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/engine.ts"), AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.6HtuU3")}
+2026-07-23T21:56:25.878338Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T21:57:50.578102Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.TiAq1u"), AnchoredSystemPathBuf("packages/verification/src/engine.ts")}
+2026-07-23T21:57:50.578112Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T21:58:09.077962Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.pwskfM"), AnchoredSystemPathBuf("packages/verification/src/engine.ts")}
+2026-07-23T21:58:09.077972Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T21:58:34.277732Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/outcomes.ts"), AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.S6s7qj")}
+2026-07-23T21:58:34.277742Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T21:58:47.377285Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/engine.ts"), AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.XUkerh")}
+2026-07-23T21:58:47.377298Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T21:59:50.377931Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.EG5wlW"), AnchoredSystemPathBuf("packages/verification/src/index.ts")}
+2026-07-23T21:59:50.377941Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T22:02:35.980683Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.bvUaLo"), AnchoredSystemPathBuf("packages/verification/src/index.ts")}
+2026-07-23T22:02:35.980694Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T22:03:56.579758Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/.turbo")}
+2026-07-23T22:03:56.579787Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T22:07:30.879482Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("docs/specs/spec-forge.yml")}
+2026-07-23T22:07:30.879492Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T22:09:40.479289Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("docs/specs/spec-blueprint.md")}
+2026-07-23T22:09:40.479347Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T22:10:04.379961Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.ARqi1y"), AnchoredSystemPathBuf("packages/verification/src/index.ts")}
+2026-07-23T22:10:04.379972Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T22:11:03.679549Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/index.ts"), AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.qOu5ik")}
+2026-07-23T22:11:03.679561Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T22:16:38.278505Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.qCYxiL"), AnchoredSystemPathBuf("packages/verification/src/index.ts")}
+2026-07-23T22:16:38.278527Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T22:21:16.178682Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/index.ts"), AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.UZcMNj")}
+2026-07-23T22:21:16.178692Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T22:22:37.778880Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/dist")}
+2026-07-23T22:22:37.778904Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T22:27:15.677354Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/engine.ts"), AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.rDyzYT")}
+2026-07-23T22:27:15.677367Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T22:28:00.077838Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.Tk2uDP"), AnchoredSystemPathBuf("packages/verification/src/engine.ts")}
+2026-07-23T22:28:00.077851Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T22:28:09.977406Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.EZ82CN"), AnchoredSystemPathBuf("packages/verification/src/engine.ts")}
+2026-07-23T22:28:09.977416Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T22:28:17.878079Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/engine.ts"), AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.gmvFpG")}
+2026-07-23T22:28:17.878088Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T22:29:24.467267Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/engine.ts"), AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.p0FwfG")}
+2026-07-23T22:29:24.467276Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T22:35:53.564328Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/src/.hermes-tmp.O1pc5e"), AnchoredSystemPathBuf("packages/verification/src/engine.ts")}
+2026-07-23T22:35:53.564357Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T22:39:17.364157Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/tests"), AnchoredSystemPathBuf("packages/verification/tests/.hermes-tmp.g6l1HY"), AnchoredSystemPathBuf("packages/verification/tests/verification-conformance.test.ts")}
+2026-07-23T22:39:17.364186Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
+2026-07-23T22:40:24.563413Z  WARN turborepo_lib::package_changes_watcher: changed_files: {AnchoredSystemPathBuf("packages/verification/tests/.hermes-tmp.roCIe0"), AnchoredSystemPathBuf("packages/verification/tests/verification-conformance.test.ts")}
+2026-07-23T22:40:24.563429Z  WARN turborepo_lib::package_changes_watcher: changed_packages: Ok(Some({WorkspacePackage { name: Root, path: AnchoredSystemPathBuf("") }}))
