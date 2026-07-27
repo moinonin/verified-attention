@@ -107,8 +107,8 @@ describe('L9: Fraud -> Verification Engine Integration', () => {
         fraudMultiplier: 2.0,
         allowManualReview: true,
         fraudScoreThreshold: 0.5, // Catch fraud
+        active: true,
       },
-      canReceiveMoreEvidence: false,
     };
 
     const result = await engine.verify(verificationInput);
@@ -187,6 +187,7 @@ describe('L9: Fraud -> Verification Engine Integration', () => {
         fraudMultiplier: 2.0,
         allowManualReview: true,
         fraudScoreThreshold: 0.7,
+        active: true,
       },
     };
 
@@ -246,6 +247,7 @@ describe('L9: Fraud -> Verification Engine Integration', () => {
         fraudMultiplier: 2.0,
         allowManualReview: true,
         fraudScoreThreshold: 0.7,
+        active: true,
       },
     };
 
@@ -304,6 +306,7 @@ describe('L9: Fraud -> Verification Engine Integration', () => {
         fraudMultiplier: 2.0,
         allowManualReview: true,
         fraudScoreThreshold: 0.5, // Lower threshold to catch fraud
+        active: true,
       },
     };
 

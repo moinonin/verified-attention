@@ -5,12 +5,12 @@
 
  RUN  v1.6.1 /Users/nickrotich/Desktop/portfolio/projects/python/verified-attention/packages/core
 
- ✓ src/evidence.test.ts  (63 tests) 14ms
- ✓ src/session.test.ts  (47 tests) 11ms
- ✓ src/observation.test.ts  (61 tests) 24ms
+ ✓ src/evidence.test.ts  (63 tests) 54ms
+ ✓ src/session.test.ts  (47 tests) 80ms
+ ✓ src/observation.test.ts  (61 tests) 99ms
 
  Test Files  3 passed (3)
       Tests  171 passed (171)
-   Start at  16:17:08
-   Duration  851ms (transform 688ms, setup 0ms, collect 1.01s, tests 49ms, environment 0ms, prepare 532ms)
+   Start at  00:35:37
+   Duration  1.49s (transform 1.03s, setup 0ms, collect 1.92s, tests 233ms, environment 0ms, prepare 523ms)
 
