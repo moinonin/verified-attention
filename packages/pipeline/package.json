@@ -1,14 +1,13 @@
 {
   "name": "@verified-attention/pipeline",
   "version": "0.1.0-dev",
-  "description": "Evidence processing pipeline: validation, normalization, feature extraction",
+  "description": "Evidence processing pipeline: validation, normalization, feature extraction, deduplication",
   "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
@@ -24,6 +23,12 @@
   "dependencies": {
     "@verified-attention/core": "workspace:*",
     "@verified-attention/store": "workspace:*",
+    "@verified-attention/pipeline-dedup": "workspace:*",
+    "@verified-attention/pipeline-features": "workspace:*",
+    "@verified-attention/pipeline-enrichment": "workspace:*",
+    "@verified-attention/pipeline-dlq": "workspace:*",
+    "@verified-attention/observability-pipeline-metrics": "workspace:*",
+    "@verified-attention/observability-tracing": "workspace:*",
     "zod": "^3.22.4"
   },
   "devDependencies": {

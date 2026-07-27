@@ -20,6 +20,8 @@ servers:
 tags:
   - name: Proofs
     description: Proof of Attention lifecycle — creation, signing, publishing, revocation, verification
+  - name: Sessions
+    description: Session lifecycle — creation, retrieval, update, close, expire
 
 security:
   - bearerAuth: []
@@ -235,6 +237,166 @@ paths:
                 $ref: '#/components/schemas/ProofValidationResult'
         '404':
           $ref: '#/components/responses/NotFound'
+
+  /sessions:
+    get:
+      tags: [Sessions]
+      summary: List sessions
+      description: Retrieve a paginated list of sessions.
+      operationId: listSessions
+      responses:
+        '200':
+          description: Paginated list of sessions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      tags: [Sessions]
+      summary: Create a session
+      description: |
+        Create a new verification session in CREATED state.
+      operationId: createSession
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSessionRequest'
+      responses:
+        '201':
+          description: Session created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /sessions/{sessionId}:
+    get:
+      tags: [Sessions]
+      summary: Get a session by ID
+      description: Retrieve a single session by its unique identifier.
+      operationId: getSession
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/SessionId'
+      responses:
+        '200':
+          description: Session found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags: [Sessions]
+      summary: Update a session
+      description: |
+        Update session configuration, participant, or metadata.
+        Only allowed for non-terminal session states.
+      operationId: updateSession
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/SessionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSessionRequest'
+      responses:
+        '200':
+          description: Session updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Session is in terminal state.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /sessions/{sessionId}/close:
+    post:
+      tags: [Sessions]
+      summary: Close a session
+      description: |
+        Close an active session, transitioning it to CANCELLED state.
+      operationId: closeSession
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/SessionId'
+      responses:
+        '200':
+          description: Session closed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Session is already in terminal state.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /sessions/{sessionId}/expire:
+    post:
+      tags: [Sessions]
+      summary: Expire a session
+      description: |
+        Expire an active session, transitioning it to EXPIRED state.
+        Only valid from ACTIVE or VERIFIED states.
+      operationId: expireSession
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/SessionId'
+      responses:
+        '200':
+          description: Session expired successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Session'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Session is not in a state that can expire.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
 components:
   securitySchemes:
@@ -456,6 +618,145 @@ components:
         message:
           type: string
           description: Human-readable error message.
+      additionalProperties: false
+
+    SessionState:
+      type: string
+      enum: [CREATED, ACTIVE, EXPIRED, VERIFIED, CERTIFIED, CANCELLED]
+      description: Session lifecycle state (VAP Section 6).
+
+    SessionParticipant:
+      type: object
+      required:
+        - viewerIdHash
+      properties:
+        viewerIdHash:
+          type: string
+          description: Hashed viewer identifier (never raw PII).
+        consentId:
+          type: string
+          description: Optional consent record reference.
+        preferences:
+          type: object
+          additionalProperties: true
+          description: Viewer preferences for this session.
+
+    SessionConfig:
+      type: object
+      properties:
+        timeoutMs:
+          type: integer
+          minimum: 1
+          description: Session timeout in milliseconds.
+          default: 1800000
+        requiredEvidenceTypes:
+          type: array
+          items:
+            type: string
+          description: Required evidence types for verification.
+        minConfidence:
+          type: number
+          minimum: 0
+          maximum: 1
+          description: Minimum confidence threshold.
+        maxDurationMs:
+          type: integer
+          minimum: 1
+          description: Maximum session duration.
+        allowedSources:
+          type: array
+          items:
+            type: string
+          description: Allowed sources for this session.
+      additionalProperties: false
+
+    Session:
+      type: object
+      required:
+        - sessionId
+        - contentId
+        - participant
+        - config
+        - state
+        - evidenceIds
+        - claimIds
+        - startedAt
+        - lastActivityAt
+      properties:
+        sessionId:
+          $ref: '#/components/schemas/SessionId'
+        contentId:
+          $ref: '#/components/schemas/ContentId'
+        participant:
+          $ref: '#/components/schemas/SessionParticipant'
+        config:
+          $ref: '#/components/schemas/SessionConfig'
+        state:
+          $ref: '#/components/schemas/SessionState'
+        evidenceIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/EvidenceId'
+        claimIds:
+          type: array
+          items:
+            type: string
+        proofId:
+          type: string
+          description: Proof reference when certified.
+        startedAt:
+          $ref: '#/components/schemas/Timestamp'
+        lastActivityAt:
+          $ref: '#/components/schemas/Timestamp'
+        expiredAt:
+          $ref: '#/components/schemas/Timestamp'
+        verifiedAt:
+          $ref: '#/components/schemas/Timestamp'
+        certifiedAt:
+          $ref: '#/components/schemas/Timestamp'
+        metadata:
+          type: object
+          additionalProperties: true
+      additionalProperties: false
+
+    CreateSessionRequest:
+      type: object
+      required:
+        - contentId
+        - participant
+      properties:
+        contentId:
+          $ref: '#/components/schemas/ContentId'
+        participant:
+          $ref: '#/components/schemas/SessionParticipant'
+        config:
+          $ref: '#/components/schemas/SessionConfig'
+        metadata:
+          type: object
+          additionalProperties: true
+      additionalProperties: false
+
+    UpdateSessionRequest:
+      type: object
+      properties:
+        config:
+          $ref: '#/components/schemas/SessionConfig'
+        participant:
+          $ref: '#/components/schemas/SessionParticipant'
+        metadata:
+          type: object
+          additionalProperties: true
+      additionalProperties: false
+
+    SessionListResponse:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Session'
       additionalProperties: false
 
   responses:

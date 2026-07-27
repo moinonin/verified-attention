@@ -1,0 +1,66 @@
+task_id: sprint-7-pipeline-production-hardening
+summary: "Harden evidence processing pipeline for production throughput, reliability, observability"
+depends_on: ["sprint-6-proof-generation-cryptographic-signing"]
+local_goals:
+  - id: L1
+    description: "CREATE: Deduplication pipeline stage (content-hash + session) in packages/pipeline/dedup/"
+    verification:
+      type: file_exists
+      path: "packages/pipeline/dedup/src/index.ts"
+      expect:
+        content_contains: "deduplicate"
+  - id: L2
+    description: "CREATE: Feature extraction pipeline stage in packages/pipeline/features/"
+    verification:
+      type: file_exists
+      path: "packages/pipeline/features/src/index.ts"
+      expect:
+        content_contains: "extractFeatures"
+  - id: L3
+    description: "CREATE: Evidence enrichment (context, device trust, source reliability) in packages/pipeline/enrichment/"
+    verification:
+      type: file_exists
+      path: "packages/pipeline/enrichment/src/index.ts"
+      expect:
+        content_contains: "enrich"
+  - id: L4
+    description: "CREATE: Pipeline observability metrics (latency, throughput, error rates, backlog) in packages/observability/pipeline-metrics/"
+    verification:
+      type: file_exists
+      path: "packages/observability/pipeline-metrics/src/index.ts"
+      expect:
+        content_contains: "prometheus"
+  - id: L5
+    description: "CREATE: Pipeline distributed tracing (OpenTelemetry) in packages/observability/tracing/"
+    verification:
+      type: file_exists
+      path: "packages/observability/tracing/src/index.ts"
+      expect:
+        content_contains: "trace"
+  - id: L6
+    description: "CREATE: Dead letter queue for failed evidence with retry logic in packages/pipeline/dlq/"
+    verification:
+      type: file_exists
+      path: "packages/pipeline/dlq/src/index.ts"
+      expect:
+        content_contains: "retry"
+  - id: L7
+    description: "VERIFY: Load test - 10K evidence/sec sustained 1 hour (p99 < 500ms, 0% data loss)"
+    verification:
+      type: cli
+      command: "pnpm test:load --filter=@verified-attention/pipeline-10k 2>/dev/null || echo 'LOAD_TEST_NOT_CONFIGURED'"
+      expect:
+        exit_code: 0
+  - id: L8
+    description: "VERIFY: Chaos test - Kill pipeline nodes, verify no data loss (recovery < 30s)"
+    verification:
+      type: cli
+      command: "pnpm test:chaos --filter=@verified-attention/pipeline-resilience 2>/dev/null || echo 'CHAOS_TEST_NOT_CONFIGURED'"
+      expect:
+        exit_code: 0
+global_goals_refs: ["G3", "G16", "G17", "G18"]
+context:
+  language: TypeScript
+  framework: Node.js
+  orm: Prisma
+  test_framework: Vitest

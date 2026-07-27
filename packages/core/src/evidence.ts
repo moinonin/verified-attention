@@ -76,6 +76,8 @@ export const ContextEvidencePayloadSchema = z.object({
   effectiveType: z.string().optional()
 }).strict();
 
+export type ContextEvidencePayload = z.infer<typeof ContextEvidencePayloadSchema>;
+
 export const CustomEvidencePayloadSchema = z.record(z.unknown());
 
 /**

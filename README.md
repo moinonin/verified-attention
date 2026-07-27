@@ -1,575 +1,524 @@
-# Verified Attention Engine (VAE)
+# Spec-Forge Ecosystem
 
-> **Establishing Verified Attention as a new layer of Internet infrastructure**
-
-[![Version](https://img.shields.io/badge/version-1.0--draft-blue)](docs/specs/0001-verified-attention-protocol.md)
-[![Status](https://img.shields.io/badge/status-living%20document-orange)](#)
-[![License](https://img.shields.io/badge/license-Apache--2.0-green)](#)
-[![Protocol](https://img.shields.io/badge/protocol-VAP--1.0-draft-purple)](docs/specs/0001-verified-attention-protocol.md)
-
----
-
-## The Problem
-
-Human attention is the scarcest resource on the Internet. It drives advertising, education, compliance, research, media, healthcare, and AI training. Yet **no infrastructure layer exists to independently verify that a human genuinely engaged with digital content**.
-
-Today's platforms measure their own metrics; advertisers trust platform reports; educators trust completion certificates; researchers trust self-reported data. All are proxy metrics—vulnerable to fraud, gaming, and misaligned incentives. Estimated 20–40% of digital ad spend is wasted on non-human traffic.
-
----
-
-## The Solution
-
-**Verified Attention** is a standard, interoperable mechanism for independently verifying human attention with measurable confidence, while preserving privacy and application neutrality.
-
-It is not an advertising technology. It is not an analytics tool. It is not a payment system. It is the **infrastructure** that makes attention verifiable—the same way DNS makes names resolvable, TLS makes connections trustworthy, and HTTP makes resources addressable.
-
-### Core Innovation: Evidence-Centric Architecture (ECA)
-
-```
-Observation → Evidence → Claim → Confidence → Verification → Proof of Attention → Applications
-```
-
-Evidence is the primary architectural primitive. Everything derives from evidence. No decision without evidence. No evidence without provenance. Evidence is immutable.
-
----
-
-## Document Hierarchy
-
-This repository follows a strict document hierarchy (per [AI_AUTHORING_GUIDE.md](docs/AI_AUTHORING_GUIDE.md)):
-
-| Document | Purpose | Status |
-|----------|---------|--------|
-| **[Venture Thesis](docs/VENTURE_THESIS.md)** | Why Verified Attention should exist — economic, philosophical, societal justification | ✅ Complete |
-| **[Project Charter](docs/specs/0000-project-charter.md)** | What VAE intends to build — scope, phases, governance, roadmap | ✅ Complete |
-| **[Verified Attention Protocol (VAP)](docs/specs/0001-verified-attention-protocol.md)** | Normative protocol specification — evidence, claims, confidence, proofs, conformance | ✅ Complete |
-| **[Verified Attention Engine (VAE)](docs/specs/0010-verified-attention-engine.md)** | Reference implementation architecture — pipelines, ML, APIs, security, deployment | ✅ Complete |
-| **[SPRINTS.md](SPRINTS.md)** | Systematic 21-sprint implementation plan (42 weeks to VAE 1.0) | ✅ Complete |
-
-**Rule**: Lower-level documents implement higher-level principles. They never redefine them.
-
----
-
-## Architecture Overview
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                            VERIFIED ATTENTION ECOSYSTEM                      │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                              │
-│  ┌──────────────┐    ┌──────────────────────────────────────────────────┐   │
-│  │   Client     │    │              VERIFIED ATTENTION ENGINE            │   │
-│  │   SDKs       │    │                                                  │   │
-│  ├──────────────┤    │  ┌──────────┐  ┌──────────┐  ┌──────────────┐   │   │
-│  │ Browser SDK  │───▶│  Evidence  │▶│ Attention │▶│ Fraud        │   │   │
-│  │ Mobile SDK   │    │  Collection│  │ Intelligence│ Intelligence │   │   │
-│  │ Desktop SDK  │    │  Pipeline  │  │ (ML)     │  (ML)        │   │   │
-│  │ Extension    │    │            │  │          │  │            │   │   │
-│  └──────────────┘    └─────┬──────┘  └────┬─────┘  └──────┬───────┘   │   │
-│                            │              │             │            │   │
-│                            ▼              ▼             ▼            │   │
-│                     ┌──────────────────────────────────────────────┐   │
-│                     │           VERIFICATION ENGINE                │   │
-│                     │  Claims → Confidence → Policy → Decision    │   │
-│                     └────────────────────┬─────────────────────────┘   │
-│                                          │                              │
-│                                          ▼                              │
-│                     ┌──────────────────────────────────────────────┐   │
-│                     │           PROOF GENERATION                   │   │
-│                     │  Sign → Store → Index → Webhook              │   │
-│                     └────────────────────┬─────────────────────────┘   │
-│                                          │                              │
-│                    ┌─────────────────────┼─────────────────────┐       │
-│                    ▼                     ▼                     ▼       │
-│           ┌──────────────┐      ┌──────────────┐      ┌──────────────┐ │
-│           │   Public     │      │   Reward     │      │  Analytics   │ │
-│           │   APIs       │      │  Intelligence│      │  & Dashboards│ │
-│           └──────────────┘      └──────────────┘      └──────────────┘ │
-│                                                                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## Key Concepts
-
-| Concept | Definition |
-|---------|------------|
-| **Observation** | Raw signal from interaction environment (mouse move, scroll, key press, viewport change, focus event) |
-| **Evidence** | Validated, immutable record derived from observations, tagged with session, timestamp, source, cryptographic integrity |
-| **Claim** | Semantic assertion about an attention session derived from evidence (e.g., "human was present," "content visible >30s") |
-| **Confidence** | Calibrated probability (0.0–1.0) that a claim is correct, computed deterministically from evidence |
-| **Verification** | Process of evaluating evidence against policy to produce decision: PASS, FAIL, INSUFFICIENT, PENDING |
-| **Proof of Attention (PoA)** | Digitally signed, auditable record confirming a session achieved verified attention with a given confidence |
-| **Viewer** | The human whose attention is being verified |
-| **Publisher** | Entity making content available and requesting attention verification |
-| **Verifier** | Entity that evaluates evidence and issues Proofs of Attention |
-| **Consumer** | Entity that receives and acts upon Proofs of Attention (advertiser, educator, researcher, etc.) |
-
----
-
-## Applications (Beyond Advertising)
-
-Verified Attention is **application-neutral infrastructure**. Advertising is merely one application.
-
-| Domain | Use Case |
-|--------|----------|
-| **Education** | Verified course completion, competency-based credentials, remote assessment integrity |
-| **Compliance** | Mandatory training verification, regulatory disclosure confirmation, audit trails |
-| **Research** | Ground-truth attention datasets, clinical trial adherence, survey quality filtering |
-| **Healthcare** | Patient education verification, therapy adherence, clinical trial compliance |
-| **AI Training** | Human feedback with verified attention (RLHF), training data quality filtering |
-| **Public Communication** | Emergency alert reach verification, civic engagement measurement |
-| **Enterprise** | Documentation effectiveness, meeting engagement, knowledge validation |
-| **Streaming** | Verified viewership for licensing, engagement-based creator compensation |
-
----
+Goal-oriented, spec-driven, verified software development. From a single natural language prompt to working software — with full audit trail.
 
 ## Quick Start
 
-> **Note**: VAE is in active development. The following reflects the target developer experience at VAE 1.0 GA (see [SPRINTS.md](SPRINTS.md) for timeline).
+```bash
+# Full autonomous delivery (spec → plan → runbook → execute)
+python3 ~/.hermes/skills/software-development/command-runway-autonomous/scripts/autonomous_execute.py \
+  --prompt "Add GET /v1/health endpoint returning JSON {status: 'ok'}" \
+  --output-dir ./features/health \
+  --output all \
+  --executor hermes \
+  --model nvidia/nemotron-3-ultra-550b-a55b:free \
+  --yolo
+```
 
-### For Publishers (Integrating Verification)
+That single command:
+1. Generates a validated YAML spec (canonical vocabulary, user-friendly errors)
+2. Assembles `PLAN.md` + `RUNBOOK.md` (written to disk before execution)
+3. Auto-approves the plan (score ≥ 0.75)
+4. Executes the runbook stage-by-stage (self-healing, retries, escalation)
+5. Produces working software + full audit trail
+
+---
+
+## Pipeline Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        AUTONOMOUS CODING PIPELINE                       │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐    ┌──────┐ │
+│  │  NL Prompt   │───▶│  Spec Gen    │───▶│  Plan Gen    │───▶│ Exec │ │
+│  │  (Human)     │    │  (Auto)      │    │  (Auto)      │    │ (Auto)│ │
+│  └──────────────┘    └──────────────┘    └──────────────┘    └──────┘ │
+│        │                   │                   │                │       │
+│        ▼                   ▼                   ▼                ▼       │
+│  validated spec.yaml    PLAN.md +          RUNBOOK.md      working     │
+│  (canonical vocab)     RUNBOOK.md         (auto-executed)  software   │
+│                        (on disk)          (on disk)                    │
+│                                                                         │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │                    SELF-HEALING LOOP                            │   │
+│  │  1. Execute command → Check verification                        │   │
+│  │  2. PASS → Next command                                         │   │
+│  │  3. FAIL → Diagnose (root cause) → Corrective action → Retry   │   │
+│  │  4. MAX_RETRIES exceeded → Escalate to human                   │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### Three Layers
+
+| Layer | File | Purpose | When Created |
+|-------|------|---------|--------------|
+| **Spec** | `spec.yaml` | WHAT (validated intent, canonical vocabulary) | Before planning |
+| **Plan** | `PLAN.md` | HOW (static blueprint with commands, outputs, failure procedures) | Planning phase |
+| **Runbook** | `RUNBOOK.md` | PROOF (execution template + audit trail) | Planning phase, filled during execution |
+
+**PLAN.md is always written to disk BEFORE any execution command runs.**
+
+---
+
+## Skills Inventory
+
+| Skill | Category | Purpose |
+|-------|----------|---------|
+| `spec-forge` | spec-forge | **Umbrella** — ecosystem map + decision matrix |
+| `spec-forge-unified` | software-development | NL → validated spec → PLAN + RUNBOOK (agent-as-LLM, no Ollama) |
+| `spec-forge-core` | software-development | NL → YAML spec (Ollama pipeline) |
+| `spec-forge-scorer` | software-development | 5-category runbook quality gate (hard gate + penalties) |
+| `spec-forge-integration-doc` | software-development | Reference: 2-skill workflow |
+| `command-runway-planner` | software-development | Spec → PLAN.md + RUNBOOK.md assembly |
+| `command-runway-pattern` | software-development | Execution methodology (⏾/✎/✓ commands) |
+| `command-runway-autonomous` | software-development | **Full pipeline** — spec → plan → runbook → execute |
+| `spec-forge-training` | mlops | Fine-tune qwen2.5-coder:7b on spec generation |
+
+### Skill Locations
+
+```
+~/.hermes/skills/
+├── spec-forge/                              # Umbrella
+│   └── spec-forge/
+├── software-development/
+│   ├── spec-forge-core/                     # Ollama NL→spec
+│   ├── spec-forge-unified/                  # Agent-as-LLM (patched validator)
+│   ├── spec-forge-scorer/                   # Quality gate
+│   ├── spec-forge-integration-doc/          # Reference
+│   ├── command-runway-planner/              # Plan assembly
+│   ├── command-runway-pattern/              # Execution methodology
+│   └── command-runway-autonomous/           # FULL PIPELINE
+│       ├── scripts/
+│       │   └── autonomous_execute.py        # Main entry point
+│       ├── references/
+│       │   ├── autonomous_config.yaml        # Config (retries, timeouts, escalation)
+│       │   └── output_modes.md               # Quick reference
+│       └── SKILL.md
+└── mlops/
+    └── spec-forge-training/                 # LoRA fine-tuning pipeline
+```
+
+---
+
+## Output Modes (`--output`)
+
+| Flag | What It Produces | When To Use |
+|------|------------------|-------------|
+| `--output spec` | `spec.yaml` only | Just want the validated spec |
+| `--output plan` | `PLAN.md` only | Review the plan, no runbook yet |
+| `--output plan+runbook` | `PLAN.md` + `RUNBOOK.md` | Full docs, execute manually |
+| `--output all` | spec + plan + runbook + **execution** | Full autonomous delivery |
+| `--output execute-only` | Executes existing `RUNBOOK.md` | Re-run or resume execution |
+
+### Examples
 
 ```bash
-# 1. Install browser SDK
-npm install @verified-attention/browser-sdk
+# Just the validated spec
+python3 autonomous_execute.py --prompt "Add health endpoint" --output-dir ./out --output spec
 
-# 2. Initialize with your verification policy
-import { VerifiedAttention } from '@verified-attention/browser-sdk';
+# Plan only for human review
+python3 ... --output plan
 
-const va = new VerifiedAttention({
-  policyId: 'pol_reading_30s',        // Pre-defined or custom policy
-  contentId: 'article_12345',          // Your content identifier
-  onProof: (proof) => console.log('Verified:', proof)
-});
+# Plan + runbook, no execution
+python3 ... --output plan+runbook
 
-// 3. Start session when user engages
-va.startSession();
+# Full autonomous delivery (Python executor)
+python3 ... --output all --executor python
 
-// 4. Receive Proof of Attention when verification passes
+# Full delivery via Hermes agent
+python3 ... --output all --executor hermes --yolo
+
+# Re-execute existing runbook
+python3 ... --output execute-only --executor python
+
+# Execute existing runbook via Hermes
+python3 ... --output execute-only --executor hermes --yolo
 ```
 
-### For Consumers (Verifying Proofs)
+---
+
+## Execution Backends (`--executor`)
+
+| Flag | Backend | How It Works |
+|------|---------|-------------|
+| `--executor python` | Built-in Python executor | Parses RUNBOOK command table, runs shell commands, verifies, retries (3x), updates log |
+| `--executor hermes` | Hermes agent | Feeds RUNBOOK to `hermes chat -q "..." --yolo` |
+| `--executor opencode` | OpenCode agent | Feeds RUNBOOK to `opencode run "..."` |
+
+### Python Executor Details
+
+The built-in Python executor:
+1. Parses RUNBOOK.md command table (`| Cmd# | Deps | Type | Command | Expected | Fallback |`)
+2. Executes commands in dependency order (⏾ inspect before ✎ create before ✓ verify)
+3. Verifies each command's result (`exit_code`, `stdout_contains`, `file_exists`, HTTP status)
+4. On failure: retries up to `--max-retries` times
+5. On max retries exceeded: escalates to human with diagnosis
+6. Updates RUNBOOK.md execution log in real-time
+
+---
+
+## All Flags
 
 ```bash
-# Install verification client
-npm install @verified-attention/client
+python3 autonomous_execute.py --help
+
+usage: autonomous_execute.py [-h] [--prompt PROMPT] --output-dir OUTPUT_DIR
+                             [--output {spec,plan,plan+runbook,all,execute-only}]
+                             [--executor {python,hermes,opencode}]
+                             [--model MODEL] [--provider PROVIDER]
+                             [--max-retries MAX_RETRIES] [--timeout TIMEOUT]
+                             [--yolo]
 ```
 
-```javascript
-import { VerifiedAttentionClient } from '@verified-attention/client';
+| Flag | Default | Purpose |
+|------|---------|---------|
+| `--prompt` | (required) | Natural language feature description |
+| `--output-dir` | (required) | Output directory for all artifacts |
+| `--output` | `all` | Output mode (spec, plan, plan+runbook, all, execute-only) |
+| `--executor` | `python` | Execution backend (python, hermes, opencode) |
+| `--model` | `nvidia/nemotron-3-ultra-550b-a55b:free` | LLM model for Hermes execution |
+| `--provider` | `openrouter` | LLM provider (openrouter, anthropic, openai) |
+| `--max-retries` | `3` | Retries per failed command |
+| `--timeout` | `120` | Command timeout in seconds |
+| `--yolo` | off | Auto-approve all operations (passed to Hermes) |
 
-const client = new VerifiedAttentionClient({
-  verifierUrl: 'https://verifier.verified-attention.org'
-});
+---
 
-// Verify a Proof of Attention independently
-const proof = await client.getProof('pid_abc123');
-const valid = await client.verifyProof(proof);
+## Canonical Vocabulary (Enforced by Validator)
 
-if (valid) {
-  console.log(`Confidence: ${proof.confidence}`);
-  console.log(`Content: ${proof.contentId}`);
-  console.log(`Verifier: ${proof.verifierId}`);
-}
+### Verification Types
+
+| Type | Required Fields | Valid `expect` Keys |
+|------|-----------------|---------------------|
+| `http` | `method`, `url` | `status`, `body_regex`, `body_contains`, `json_schema`, `headers_contain` |
+| `cli` | `command` (≥3 chars) | `exit_code`, `stdout_regex`, `stdout_contains`, `stdout_lines_min` |
+| `file_exists` | `path` | `content`, `content_contains`, `content_not_contains`, `exists` |
+| `manual` | `description` | (none — description IS the check) |
+
+### Critical Placement Rules
+
+1. **REQUEST headers** (`Authorization`, etc.) are a SIBLING of `expect`, under `verification`. NEVER inside `expect`.
+2. **RESPONSE header assertions** go INSIDE `expect` as `headers_contain` (a map of header-name → required-substring).
+3. **Regex patterns in string values MUST use single quotes** (e.g. `Retry-After: '\d+'`). YAML double quotes reject backslash escapes like `\d`, `\w`, `\s`.
+4. **`json_schema` must be inline** — no `$ref`, no `definitions` blocks.
+5. **`body` values must be literal JSON** — no expressions like `"a" * 101`. Use placeholders like `{{test_user_id}}` for dynamic values.
+
+### Spec Rules
+
+- Minimum 2 `local_goals` (1 is never enough)
+- Goal IDs must match `^L[A-Za-z0-9]+` (e.g. L1, L2, L3A)
+- No duplicate IDs
+- No near-duplicate verifications (same type + same target + same expect keys)
+- Every goal must verify a DISTINCT aspect
+
+---
+
+## User-Facing Error Messages
+
+When a spec fails validation, the validator produces actionable error messages:
+
+```
+❌ Spec validation failed:
+
+  1.
+❌ You need at least 2 verification goals (L1, L2...). One goal is never enough.
+
+  2.
+❌ HTTP verification must have `expect.status` (e.g., 200, 401, 404).
+
+💡 Fix the issues above and re-run validation.
 ```
 
-### For Developers (Running Locally)
+### Error Hint Examples
+
+| Violation | User-Facing Message |
+|-----------|---------------------|
+| Missing `task_id` | "Add a `task_id` — a short kebab-case identifier like `add-user-profile`" |
+| Only 1 goal | "You need at least 2 verification goals (L1, L2...). One goal is never enough." |
+| `id: foo` | "Goal IDs must start with 'L' followed by letters/digits. Fix: change 'id: foo' → 'id: L1'" |
+| `type: api` | "Verification type must be one of: http, cli, file_exists, manual." |
+| Missing `expect.status` | "HTTP verification must have `expect.status` (e.g., 200, 401, 404)." |
+| Near-duplicate goals | "Two goals verify the same thing. Differentiate by: Different URL/method, Different path, Different command, Different expect keys." |
+| Double-quoted regex `"\d+"` | "Use single quotes: `'\d+'`" |
+| `json_schema` with `$ref` | "Don't use `$ref` or `definitions` — write the full schema inline." |
+
+---
+
+## Training Pipeline (Fine-Tuning qwen2.5-coder)
+
+The training pipeline creates a **fine-tuned LLM** (named `specforge`) specialized for spec generation. This is separate from the autonomous executor but complementary.
+
+### When To Use
+
+| If you want... | Use... |
+|----------------|--------|
+| Build software from a prompt (now) | `--executor hermes` or `--executor python` (current LLM) |
+| Generate training data for fine-tuning | `make generate N=100` in githeri repo |
+| Fine-tune qwen2.5-coder on spec generation | `make train` in githeri repo (needs CUDA GPU) |
+| Deploy the fine-tuned model to Ollama | `make merge` + `ollama create specforge` |
+| Use the fine-tuned model for autonomous execution | `autonomous_execute.py --executor python` (uses Ollama specforge) |
+
+### Training Pipeline Stages
 
 ```bash
-# Clone and start development stack
-git clone https://github.com/verified-attention/vae.git
-cd vae
-pnpm install
-pnpm dev          # Starts API, verifier, ML serving, dashboard
+cd ~/Desktop/portfolio/projects/python/verified-attention/githeri
 
-# Run conformance tests
-pnpm test:conformance
+# 1. Generate training data (spec pairs via Ollama)
+make generate N=100
+make score
+make convert-chat
+
+# 2. LoRA fine-tune (needs CUDA GPU — run on Ryzen 9)
+make train                    # 3 epochs, LoRA r=16, 4-bit, gradient checkpointing
+
+# 3. Merge + GGUF export
+make merge                    # q4_k_m + q8_0 GGUF
+
+# 4. Deploy to Ollama
+ollama create specforge -f models/qwen2.5-coder-7b-specforge-gguf/Modelfile
+
+# 5. Evaluate
+make eval-model               # Target: >80% first-attempt pass rate
+
+# 6. Upload to HuggingFace Hub (requires HF_TOKEN in .env)
+make upload-hf REPO=githeri/qwen2.5-coder-7b-specforge
 ```
 
----
-
-## Repository Structure
-
-```
-verified-attention/
-├── docs/
-│   ├── AI_AUTHORING_GUIDE.md           # Writing standards for all documents
-│   ├── VENTURE_THESIS.md               # Why Verified Attention exists
-│   └── specs/
-│       ├── 0000-project-charter.md     # What VAE builds
-│       ├── 0001-verified-attention-protocol.md  # VAP normative spec
-│       └── 0010-verified-attention-engine.md    # VAE architecture
-├── SPRINTS.md                          # 21-sprint implementation plan
-├── packages/
-│   ├── core/                           # Shared types: Evidence, Claim, Proof, Session
-│   │   ├── evidence/
-│   │   ├── observation/
-│   │   ├── session/
-│   │   ├── claim/
-│   │   └── proof/
-│   ├── pipeline/                       # Evidence processing pipeline
-│   │   ├── validation/
-│   │   ├── normalization/
-│   │   ├── deduplication/
-│   │   ├── features/
-│   │   └── enrichment/
-│   ├── verification/                   # Verification engine
-│   │   ├── confidence/
-│   │   ├── engine/
-│   │   └── policy/
-│   ├── ml/                             # ML models & serving
-│   │   ├── attention/
-│   │   └── fraud/
-│   ├── reward/                         # Reward intelligence
-│   │   ├── eligibility/
-│   │   ├── campaigns/
-│   │   ├── pricing/
-│   │   └── settlement/
-│   ├── crypto/                         # Cryptographic primitives
-│   │   ├── keys/
-│   │   ├── signing/
-│   │   └── hsm/
-│   ├── store/                          # Storage abstractions
-│   │   ├── evidence/
-│   │   ├── proof/
-│   │   └── verification-audit/
-│   ├── observability/                  # Metrics, tracing, alerting
-│   ├── auth/                           # Authentication & authorization
-│   ├── privacy/                        # Consent, minimisation, retention
-│   └── sdk/
-│       ├── browser/
-│       ├── android/
-│       ├── ios/
-│       ├── desktop/
-│       └── extension/
-├── apps/
-│   ├── api/                            # Public REST/Streaming APIs
-│   ├── verifier/                       # Verification & proof generation service
-│   ├── ml-serving/                     # Model inference servers
-│   ├── developer-portal/               # Docs, API explorer, SDK downloads
-│   ├── marketplace/                    # Attention marketplace (Phase 5)
-│   └── cli/                            # Command-line tools
-├── tests/
-│   ├── unit/
-│   ├── integration/
-│   ├── conformance/                    # VAP conformance test suites
-│   ├── load/
-│   └── chaos/
-├── research/
-│   ├── literature-review.md
-│   └── models/
-└── infra/                              # Kubernetes, Terraform, Helm charts
-```
-
----
-
-## Protocol Conformance
-
-Any implementation claiming VAP compliance **MUST** pass the conformance test suite:
+### Full Cycle: Training → Autonomous Execution
 
 ```bash
-# Run conformance tests against your implementation
-pnpm test:conformance -- --target=<your-endpoint>
-```
-
-Conformance covers:
-- Evidence model validation (VAP Section 5)
-- Session state machine (VAP Section 6)
-- Claim structure & lifecycle (VAP Section 7)
-- Confidence model determinism (VAP Section 8)
-- Verification lifecycle & outcomes (VAP Section 9)
-- Proof object structure & signature (VAP Section 10)
-- Protocol messages (VAP Section 14)
-- Privacy requirements (VAP Section 17)
-
-See [Conformance Framework](packages/conformance/) for details.
-
----
-
-## Security & Privacy
-
-### Security
-
-- **Threat Model**: [STRIDE analysis](docs/security/threat-model.md) covering all components
-- **Authentication**: OAuth2/OIDC, API keys, mTLS for service-to-service
-- **Authorization**: RBAC (admin, operator, reviewer, consumer, publisher)
-- **Encryption**: TLS 1.3 everywhere, AES-256 at rest, HSM/KMS for signing keys
-- **Penetration Testing**: Conducted per sprint (see [Sprint 14](SPRINTS.md#sprint-14-security-hardening--penetration-testing))
-
-### Privacy
-
-- **Data Minimisation**: Only VAP-required fields collected and stored
-- **Consent**: Opt-in, session-scoped, granular, revocable
-- **Pseudonymisation**: Session IDs unlinkable to viewer identity
-- **Retention**: Evidence 90 days, Proofs 7 years, Analytics aggregated only
-- **Data Subject Rights**: GDPR Art 15–20 API (access, rectification, erasure, portability)
-- **DPIA**: [Data Protection Impact Assessment](docs/privacy/dpia-final.md) completed and audited
-
----
-
-## Development
-
-### Prerequisites
-
-- Node.js ≥ 20 / Python ≥ 3.11
-- pnpm ≥ 9
-- Docker & Docker Compose
-- Kubernetes (kind/minikube for local)
-
-### Commands
-
-```bash
-# Install dependencies
-pnpm install
-
-# Start local development stack
-pnpm dev
-
-# Run all tests
-pnpm test
-
-# Run conformance tests only
-pnpm test:conformance
-
-# Type-check all packages
-pnpm typecheck
-
-# Lint
-pnpm lint
-
-# Build all packages
-pnpm build
-
-# Generate OpenAPI spec from API code
-pnpm openapi:generate
-
-# Generate SDKs from OpenAPI
-pnpm sdk:generate
-```
-
-### Architecture Decision Records (ADRs)
-
-Significant architectural decisions are documented as ADRs:
-
-- [ADR-001](docs/adr/0001-language-framework.md): Language & Framework Selection
-- [ADR-002](docs/adr/0002-model-serving.md): Model Serving Architecture
-- [ADR-003](docs/adr/0003-verifier-trust.md): Verifier Identity & Trust Model
-
-Create new ADRs for any decision affecting:
-- Cross-package interfaces
-- Protocol behaviour
-- Security/privacy posture
-- Scalability limits
-- External dependencies
-
----
-
-## Roadmap
-
-| Milestone | Target | Criteria |
-|-----------|--------|----------|
-| **M1: VAP 1.0-Draft** | Sprint 4 | Spec complete, conformance framework running |
-| **M2: Verification Core** | Sprint 6 | Session → evidence → verification → proof |
-| **M3: Pipeline Hardened** | Sprint 7 | 10K evid/sec, chaos-tested |
-| **M4: ML Models Ready** | Sprint 9 | Attention + fraud models serving, calibrated |
-| **M5: VAE Feature-Complete** | Sprint 15 | All subsystems integrated, audited |
-| **M6: SDKs Complete** | Sprint 18 | Browser, mobile, desktop, extension shipped |
-| **M7: Public API Stable** | Sprint 19 | OpenAPI spec, generated SDKs, dev portal |
-| **M8: VAE 1.0 RC** | Sprint 21 | Beta feedback integrated, launch checklist done |
-| **M9: VAE 1.0 GA** | Sprint 21+2w | RC validated, docs complete, support ready |
-| **M10: Marketplace 1.0** | Sprint 24 | Live transactions, legal cleared |
-| **M11: Standards Submission** | Sprint 25 | IETF/W3C submission acknowledged |
-
-Full sprint-by-sprint plan: [SPRINTS.md](SPRINTS.md)
-
----
-
-## Contributing
-
-We welcome contributions aligned with the [Venture Thesis](docs/VENTURE_THESIS.md) and [Project Charter](docs/specs/0000-project-charter.md).
-
-### Getting Started
-
-1. Read the [Venture Thesis](docs/VENTURE_THESIS.md) to understand the *why*
-2. Read the [Project Charter](docs/specs/0000-project-charter.md) to understand the *what*
-3. Read the [VAP Specification](docs/specs/0001-verified-attention-protocol.md) to understand the *rules*
-4. Read the [VAE Architecture](docs/specs/0010-verified-attention-engine.md) to understand the *implementation*
-5. Check [SPRINTS.md](SPRINTS.md) for current focus areas
-6. Look for `good first issue` labels on GitHub Issues
-
-### Contribution Process
-
-1. **Discuss first**: Open an issue or discussion before significant work
-2. **Follow ADR process**: Architectural changes require an ADR
-3. **Conformance-first**: New protocol features need conformance tests
-4. **Privacy-by-design**: All changes assessed for privacy impact
-5. **Documentation**: Update docs in the same PR as code
-
-### Code Standards
-
-- TypeScript (strict mode) for all new packages
-- Python 3.11+ for ML/research components
-- RFC 2119 language in protocol specifications
-- Semantic versioning for all packages
-- Conventional commits for changelog generation
-
----
-
-## Governance
-
-### Protocol Governance
-
-VAP evolution follows an RFC-style process (see [Charter Section 15](docs/specs/0000-project-charter.md#15-governance)):
-
-1. **Proposal** → Anyone may submit
-2. **Review** → Technical steering committee evaluates
-3. **Discussion** → Open community feedback
-4. **Decision** → Approve, reject, or request modifications
-5. **Implementation** → VAE + conformance tests updated
-6. **Publication** → New specification version
-
-### Project Governance
-
-- **Technical Steering Committee**: Oversees protocol evolution, architectural decisions
-- **Security/Privacy Board**: Independent review of security/privacy changes
-- **Research Advisory Council**: Guides research agenda, validates methodology
-
-As the ecosystem matures, governance transitions to a neutral foundation (see [Charter Section 15](docs/specs/0000-project-charter.md#15-governance)).
-
----
-
-## Research Programme
-
-Open research questions driving the project (from [Thesis Section 15](docs/VENTURE_THESIS.md#15-research-agenda)):
-
-1. **Objective attention measurement**: What is ground truth for attention?
-2. **Confidence calibration limits**: Theoretical ceiling for human vs. simulation distinction?
-3. **Predictive signals**: Which behavioural features maximize information gain per privacy cost?
-4. **Uncertainty representation**: Beyond point-confidence to intervals, credal sets?
-5. **Fraud economics**: At what detection rate does fraud become unprofitable?
-6. **Mathematical privacy guarantees**: Differential privacy, ZK proofs, SMPC, on-device attestation?
-7. **Accessibility & cultural fairness**: Verification equity across populations?
-8. **Attention market design**: Price discovery, auction mechanisms, incentive compatibility?
-9. **AI training dynamics**: Does verified attention filtering improve model quality/alignment?
-10. **Decentralised verification**: Federated, on-device, blockchain-anchored, threshold signatures?
-
-See [Research Agenda](docs/VENTURE_THESIS.md#15-research-agenda) and [Charter Section 13](docs/specs/0000-project-charter.md#13-research-programme) for details.
-
----
-
-## License
-
-This project is licensed under the **Apache License 2.0** — see [LICENSE](LICENSE) for details.
-
-Protocol specifications (VAP) are additionally dedicated to the public domain via **CC0-1.0** to encourage unrestricted implementation.
-
----
-
-## Development — Make Targets
-
-All backend entrypoints are exposed as Make targets. Each target is verbose (prints what it's doing), idempotent (safe to re-run), and documented here.
-
-**Python Virtual Environment:** All Python targets use `.venv/bin/python` — never bare `python` or `python3`. The `venv` target creates it if missing (prefers Python 3.11, falls back to `python3`). If the `.venv` was created at a different path and moved/copied, its shebangs will break — run `make clean-venv && make venv` to recreate.
-
-**TypeScript Monorepo:** All TS targets use `pnpm` with Turborepo. Packages live in `packages/core`, `packages/pipeline`, `packages/store`.
-
-### Quick Start
-
-```bash
-make install     # Create .venv + install pnpm packages
-make test        # Run ALL tests (Python + TypeScript)
-make verify      # Full verification: build + typecheck + lint + test
-```
-
-### Target Reference
-
-| Target | Purpose | Prerequisites | Usage | Expected Output |
-|--------|---------|---------------|-------|-----------------|
-| `make help` | List all available targets with descriptions | None | `make help` | Colored list of all targets |
-| `make venv` | Create or verify Python `.venv` (Python 3.11+ preferred) | `python3` or `python3.11` installed | `make venv` | `.venv/` directory with working Python |
-| `make install` | Install all dependencies (Python venv + pnpm packages) | `python3`, `pnpm` | `make install` | `.venv/` created, `node_modules/` populated |
-| `make prototype` | Run the Python evidence ingestion prototype (`scripts/prototype-ingest.py`) | `.venv` (auto-created) | `make prototype` | End-to-end pipeline output: mock observations → evidence → store |
-| `make test-py` | Run Python tests (currently smoke-tests the prototype) | `.venv` (auto-created) | `make test-py` | Prototype runs without error |
-| `make build` | Build all TypeScript packages | `pnpm` installed | `make build` | `dist/` in each package, exit 0 |
-| `make test-ts` | Run all TypeScript unit tests | Packages built | `make test-ts` | All tests pass (currently 211 tests across core, pipeline, store) |
-| `make typecheck` | Run `tsc --noEmit` across all packages | `pnpm` installed | `make typecheck` | No type errors, exit 0 |
-| `make lint` | Run ESLint across all packages | `pnpm` installed | `make lint` | No errors (warnings non-blocking) |
-| `make test` | Run ALL tests — Python + TypeScript | `.venv`, pnpm packages | `make test` | All tests pass |
-| `make verify` | Full verification gate: build + typecheck + lint + test | `.venv`, pnpm packages | `make verify` | All gates pass, exit 0 |
-| `make clean` | Remove build artifacts (`dist/`), coverage, prototype data | None | `make clean` | Clean working tree |
-| `make clean-venv` | Remove `.venv` (forces recreation on next `make venv`) | None | `make clean-venv` | `.venv/` deleted |
-
-### Python Prototype Details
-
-The prototype (`scripts/prototype-ingest.py`) demonstrates the VAP evidence pipeline:
-1. Creates 15 mock observations (scroll, click, keypress, visibility, focus)
-2. Validates each observation against VAP Section 4 requirements
-3. Normalizes to canonical signal types
-4. Creates evidence from observations (E-INTERACTION, E-VISIBLE, E-DURATION, E-CONTEXT)
-5. Stores evidence in append-only JSONL file (`data/evidence_store.jsonl`)
-6. Retrieves and displays stored evidence
-
-```bash
-make prototype          # Run via Make (preferred)
-.venv/bin/python scripts/prototype-ingest.py  # Run directly
-```
-
-### Verification Protocol
-
-For COMMAND_RUNWAY sprint execution, the standard verification sequence is:
-```bash
-make verify   # build → typecheck → lint → test (all must pass)
+# 1. Generate training data
+cd ~/Desktop/portfolio/projects/python/verified-attention/githeri
+make generate N=100 && make score && make convert-chat
+
+# 2. Fine-tune (on Ryzen 9 or other CUDA machine)
+make train && make merge
+
+# 3. Deploy to Ollama
+ollama create specforge -f models/qwen2.5-coder-7b-specforge-gguf/Modelfile
+
+# 4. Use fine-tuned model for autonomous execution
+python3 ~/.hermes/skills/software-development/command-runway-autonomous/scripts/autonomous_execute.py \
+  --prompt "Add GET /v1/health endpoint" \
+  --output-dir ./health \
+  --output all \
+  --executor python
 ```
 
 ---
 
-## Citation
+## Ollama vs Current LLM
 
-If you reference this work in academic or technical contexts:
+| Factor | Ollama (qwen2.5-coder:7b) | Current LLM (Nemotron, Claude, etc.) |
+|--------|---------------------------|--------------------------------------|
+| Model size | 7B params | 100B-550B params |
+| Reasoning quality | Good for code, struggles with complex specs | Excellent at complex reasoning |
+| Cost | Free (local hardware) | API costs per token |
+| Privacy | Fully local | Data leaves machine |
+| Hardware | Needs 8GB+ VRAM | None |
+| Fine-tuning | Possible (LoRA) | Not possible |
+| Offline | Yes | No |
+| Spec first-try pass rate | ~70% (needs retries) | ~90%+ (few retries) |
 
-```bibtex
-@misc{verified-attention-2026,
-  title={Verified Attention: A New Layer of Internet Infrastructure},
-  author={Verified Attention Project Contributors},
-  year={2026},
-  howpublished={\url{https://github.com/verified-attention/vae}},
-  note={Venture Thesis v1.0, VAP 1.0-draft, VAE 1.0-dev}
-}
+**Recommendation**: Use `spec-forge-unified` (current LLM) for most work. Use Ollama only if you need offline, zero-cost, or fine-tuned spec generation.
+
+---
+
+## Configuration
+
+### autonomous_config.yaml
+
+```yaml
+# ~/.hermes/skills/software-development/command-runway-autonomous/references/autonomous_config.yaml
+max_retries_per_command: 3
+max_retries_per_stage: 2
+escalation_threshold:
+  consecutive_failures: 3
+  blocked_duration_minutes: 30
+  critical_error_keywords:
+    - "security"
+    - "data_loss"
+    - "schema_migration"
+    - "permission_denied"
+auto_approve_plan: true
+auto_execute_runbook: true
+min_spec_score: 0.75
+max_commands_per_feature: 50
+max_execution_time_minutes: 60
+allow_destructive: false
+```
+
+### Safety Guards
+
+1. **PLAN.md before execution** — Plan written to disk before any command runs
+2. **Auto-approval threshold** — Only auto-approves if spec score ≥ 0.75
+3. **Max retries** — 3 per command, 2 per stage (configurable)
+4. **Escalation** — Human alerted on: max retries, critical errors, 30min blocked
+5. **No destructive ops** — `rm -rf`, `DROP TABLE`, `git push --force` blocked unless `allow_destructive: true`
+6. **No production writes** — Blocked unless `environment: production` with human approval
+7. **Budget limits** — max 50 commands, max 60 minutes per feature
+
+---
+
+## Output Files
+
+### Per Feature
+
+```
+<output-dir>/
+├── spec.yaml          # Validated spec (always)
+├── PLAN.md            # --output plan|plan+runbook|all
+├── RUNBOOK.md         # --output plan|plan+runbook|all (with exec log in --output all)
+└── logs/
+    └── autonomous_execution.log
+```
+
+### File Contents
+
+**spec.yaml** — Validated YAML with `task_id`, `summary`, `local_goals[]` (with `verification` blocks), `context` (language, framework, ORM, test_framework), `global_goals_refs[]`.
+
+**PLAN.md** — Human-readable execution plan with:
+- Feature name, purpose, dependencies, assumptions
+- Global success criteria
+- Execution stages (each with objective, inputs, preconditions, discovery tasks, execution tasks, suggested commands, expected outputs, local verification, failure procedure, completion condition)
+- Global verification (build, test, typecheck, lint, security, etc.)
+
+**RUNBOOK.md** — Machine-executable template with:
+- Taxonomy (Feature → Stages → Commands)
+- Intent & goals (global + local)
+- Preconditions table
+- Command Runway table (`| Cmd# | Deps | Type | Command | Expected | Fallback |`)
+- Execution Log (filled during execution)
+- Goal Verification (local + global)
+- Iteration & Notes
+- Machine-Readable JSON (with DAG, structured assertions, `depends_on`)
+
+---
+
+## Command Runway Format
+
+### Command Types
+
+| Marker | Role | Can Mutate? |
+|--------|------|-------------|
+| ⏾ | inspect (read-only) | No |
+| ✎ | modify/create | Yes |
+| ✓ | verify (assert) | No |
+
+### Stage Structure
+
+- Each stage: < 1 hour, 5-15 commands
+- Order within stage: ⏾ (inspect) → ✎ (mutate) → ✓ (verify)
+- Every ✎ command must have at least one ⏾ in its `depends_on` chain
+- Every stage ends with at least one ✓ verify command
+
+### Example Command Table
+
+```markdown
+### Stage 1: Create health endpoint
+
+| Cmd# | Deps | Type | Command | Expected | Fallback |
+|------|------|------|---------|----------|----------|
+| C1   | —    | ⏾    | cat packages/core/src/index.ts | file contents | search for file |
+| C2   | C1   | ✎    | cat > apps/api/src/routes/health.ts << 'EOF'... | new file | revert, retry |
+| C3   | C2   | ✓    | test -f apps/api/src/routes/health.ts && grep -q 'health' ... | exit 0 | revert, retry |
 ```
 
 ---
 
-## Links
+## Decision Matrix: Which Skill To Use
 
-| Resource | Link |
-|----------|------|
-| **Venture Thesis** | [docs/VENTURE_THESIS.md](docs/VENTURE_THESIS.md) |
-| **Project Charter** | [docs/specs/0000-project-charter.md](docs/specs/0000-project-charter.md) |
-| **VAP Specification** | [docs/specs/0001-verified-attention-protocol.md](docs/specs/0001-verified-attention-protocol.md) |
-| **VAE Architecture** | [docs/specs/0010-verified-attention-engine.md](docs/specs/0010-verified-attention-engine.md) |
-| **Implementation Plan** | [SPRINTS.md](SPRINTS.md) |
-| **Authoring Guide** | [docs/AI_AUTHORING_GUIDE.md](docs/AI_AUTHORING_GUIDE.md) |
-| **Issue Tracker** | [GitHub Issues](https://github.com/verified-attention/vae/issues) |
-| **Discussions** | [GitHub Discussions](https://github.com/verified-attention/vae/discussions) |
-
----
-
-## Acknowledgements
-
-This work builds on research in behavioural biometrics, bot detection, confidence calibration, privacy-enhancing technologies, and Internet architecture. Key influences include:
-
-- IETF/W3C standards processes (RFC 2119, HTTP, TLS, DID, VC)
-- MRC/IAB viewability standards
-- Behavioral biometrics literature (keystroke dynamics, mouse dynamics)
-- Adversarial ML & fraud detection research
-- Privacy-enhancing technologies (differential privacy, ZK proofs, federated learning)
-- Open-source infrastructure projects (Kubernetes, Kafka, OpenTelemetry, Prometheus)
-
-See [Thesis Appendix B](docs/VENTURE_THESIS.md#appendix-b-research-references) for detailed references.
+| Scenario | Skill | Command |
+|----------|-------|---------|
+| "I have a prompt, give me working software" | `command-runway-autonomous` | `autonomous_execute.py --output all` |
+| "I just want a validated spec" | `command-runway-autonomous` | `autonomous_execute.py --output spec` |
+| "I want to review the plan before execution" | `command-runway-autonomous` | `autonomous_execute.py --output plan` |
+| "I want plan + runbook, I'll execute manually" | `command-runway-autonomous` | `autonomous_execute.py --output plan+runbook` |
+| "I have a RUNBOOK, just execute it" | `command-runway-autonomous` | `autonomous_execute.py --output execute-only` |
+| "I want to use Ollama for spec generation" | `spec-forge-core` | `make spec` in githeri repo |
+| "I want agent-as-LLM, no Ollama" | `spec-forge-unified` | Load skill, agent writes spec directly |
+| "I want to score a runbook" | `spec-forge-scorer` | Run scorer script |
+| "I want to fine-tune a model" | `spec-forge-training` | `make train` in githeri repo |
+| "I want to understand the ecosystem" | `spec-forge` (umbrella) | Load skill, read decision matrix |
 
 ---
 
-> **Verified Attention is proposed as a foundational layer of Internet infrastructure that enables trust wherever digital attention carries economic or societal value.**
->
-> — [Venture Thesis, Conclusion](docs/VENTURE_THESIS.md#20-conclusion)
+## Self-Healing Behavior
+
+### On Command Failure (Per-Command)
+
+| Attempt | Action |
+|---------|--------|
+| 1 | Execute command → Check verification |
+| 2 | Re-read spec/PLAN → Re-execute with more context |
+| 3 | Diagnose root cause → Corrective action → Retry |
+| 4+ | Escalate to human |
+
+### On Stage Failure (Per-Stage)
+
+| Attempt | Action |
+|---------|--------|
+| 1 | Execute all stage commands |
+| 2 | Re-read PLAN.md → Re-execute failed commands |
+| 3 | Full stage re-plan (agent re-generates stage commands) |
+
+### Escalation Triggers
+
+- `max_retries_per_stage` exceeded
+- `consecutive_failures` > threshold (default: 3)
+- `blocked_duration_minutes` exceeded (default: 30)
+- Error contains: `security`, `data_loss`, `schema_migration`, `permission_denied`
+- Critical infrastructure down (DB, message queue, external API)
+
+### Escalation Report
+
+When escalated, the system produces:
+
+```markdown
+## 🚨 AUTONOMOUS ESCALATION
+
+**Feature:** add-user-profile
+**Stage:** 3 (Verify: POST /users returns 201)
+**Command:** `pnpm test --filter=...`
+**Failures:** 3 consecutive
+**Duration:** 45 minutes blocked
+
+### Last Error
+(error output)
+
+### Diagnosed Root Cause
+- [x] Incorrect assumption: email uniqueness not checked
+- [ ] Missing dependency
+- [ ] Incorrect implementation
+- [ ] Environment problem
+- [ ] Test failure
+- [ ] Unexpected architecture
+
+### Suggested Corrective Actions
+1. Add email uniqueness check before INSERT
+2. Return 409 CONFLICT with error code EMAIL_EXISTS
+3. Add test for duplicate email case
+
+### Options
+- [ ] Apply suggested fix and resume
+- [ ] Re-plan stage and resume
+- [ ] Abort feature
+- [ ] Human takes over
+```
+
+---
+
+## Origin
+
+Built for the Verified Attention Engine (VAE) project. Tested end-to-end with Hermes Agent on Sprint 6 (proof generation + cryptographic signing) and Sprint 7 (pipeline production hardening).
+
+The Spec-Forge ecosystem evolved from a two-skill workflow (spec-forge-core + command-runway-pattern) into a complete autonomous pipeline with:
+- Canonical vocabulary (validated by Python validator)
+- User-friendly error messages (15 error hints with fix instructions)
+- Multiple output modes (spec, plan, plan+runbook, all, execute-only)
+- Multiple execution backends (Python, Hermes, OpenCode)
+- Self-healing with escalation
+- Training pipeline for fine-tuning models

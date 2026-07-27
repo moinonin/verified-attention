@@ -4,6 +4,8 @@
   "private": true,
   "workspaces": [
     "packages/*",
+    "packages/pipeline/*",
+    "packages/observability/*",
     "apps/*"
   ],
   "scripts": {

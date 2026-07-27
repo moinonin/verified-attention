@@ -118,6 +118,8 @@ export {
   type Evidence,
   type EvidenceWithState,
   type EvidenceValidationResult,
+  // Add ContextEvidencePayload type export
+  type ContextEvidencePayload,
   createEvidence,
   computeEvidenceHash,
   validateEvidence

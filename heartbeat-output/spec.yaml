@@ -1,0 +1,22 @@
+context:
+  framework: Node.js
+  language: TypeScript
+  test_framework: Vitest
+depends_on: []
+local_goals:
+- description: 'CREATE: Heartbeat stage package with HeartbeatStage class'
+  id: L1
+  verification:
+    expect:
+      content_contains: HeartbeatStage
+    path: packages/pipeline/heartbeat/src/index.ts
+    type: file_exists
+- description: 'VERIFY: Heartbeat tests pass'
+  id: L2
+  verification:
+    command: pnpm test --filter=@verified-attention/pipeline-heartbeat
+    expect:
+      exit_code: 0
+    type: cli
+summary: Add heartbeat pipeline stage
+task_id: heartbeat-package

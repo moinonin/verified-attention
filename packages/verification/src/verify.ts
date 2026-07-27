@@ -6,6 +6,7 @@
 
 import { verify } from 'crypto';
 import type { KeyObject } from 'crypto';
+import { createHash } from 'crypto';
 import type { Proof, ProofValidationResult, ProofState } from '@verified-attention/core';
 
 /**
@@ -54,15 +55,12 @@ export function verifyProofHash(proof: Proof): boolean {
     signature: proof.signature
   }, null, 0);
 
-  // Use Node crypto for SHA-256
-  const { createHash } = require('crypto');
   const recomputed = createHash('sha256').update(data).digest('hex');
 
   return recomputed === recomputed; // Hash self-consistency (the evidenceHash IS part of the proof)
   // Note: The evidenceHash field represents the hash of the evidence considered,
   // not a hash of the proof itself. Full proof integrity is verified by the signature.
 }
-
 /**
  * Fully verify a proof: signature validity, state check, and expiry check.
  * Returns a ProofValidationResult.

@@ -213,6 +213,17 @@ export class VerificationEngine {
     // Check if all required evidence types are present
     const allRequiredPresent = presentRequiredTypes.length === requiredTypes.size;
 
+    // Extract fraud score from E-CUSTOM evidence (fraud detection results)
+    let extractedFraudScore = 0;
+    for (const e of input.evidence) {
+      if (e.evidenceType === 'E-CUSTOM') {
+        const payload = e.payload as Record<string, unknown>;
+        if (payload.fraudScore !== undefined && typeof payload.fraudScore === 'number') {
+          extractedFraudScore = Math.max(extractedFraudScore, payload.fraudScore);
+        }
+      }
+    }
+
     // Build confidence input
     const confidenceInput: ConfidenceInput = {
       evidenceQuality,
@@ -220,7 +231,7 @@ export class VerificationEngine {
       evidenceCount: input.evidence.length,
       sourceReliability,
       contradictionPenalty,
-      fraudScore: undefined, // fraudScore not in evidence metadata schema
+      fraudScore: extractedFraudScore,
     };
 
     // Calculate confidence
