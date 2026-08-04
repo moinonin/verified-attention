@@ -159,7 +159,7 @@ export class AttentionModel {
         monitor: 'val_loss',
         mode: 'min',
         patience: trainConfig.earlyStoppingPatience,
-        restoreBestWeights: true,
+        // restoreBestWeights: true is not implemented in tfjs-layers 4.22.0
       }),
     ];
 

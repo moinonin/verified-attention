@@ -3,4 +3,5 @@ packages:
   - packages/pipeline/*
   - packages/observability/*
   - packages/ml/**
+  - packages/store/**
   - apps/*

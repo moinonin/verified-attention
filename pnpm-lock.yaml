@@ -64,6 +64,34 @@ importers:
         specifier: ^1.0.0
         version: 1.6.1(@types/node@20.19.43)
 
+  apps/verifier:
+    dependencies:
+      '@verified-attention/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@verified-attention/store-verification-audit':
+        specifier: workspace:*
+        version: link:../../packages/store/verification-audit
+      '@verified-attention/verification':
+        specifier: workspace:*
+        version: link:../../packages/verification
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: ^20.10.0
+        version: 20.19.43
+      tsdown:
+        specifier: ^0.11.0
+        version: 0.11.13(typescript@5.9.3)
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+      vitest:
+        specifier: ^1.0.0
+        version: 1.6.1(@types/node@20.19.43)
+
   packages/conformance:
     dependencies:
       '@verified-attention/core':
@@ -447,6 +475,31 @@ importers:
       '@verified-attention/core':
         specifier: workspace:*
         version: link:../core
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: ^20.10.0
+        version: 20.19.43
+      tsdown:
+        specifier: ^0.11.0
+        version: 0.11.13(typescript@5.9.3)
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+      vitest:
+        specifier: ^1.0.0
+        version: 1.6.1(@types/node@20.19.43)
+
+  packages/store/verification-audit:
+    dependencies:
+      '@verified-attention/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@verified-attention/store':
+        specifier: workspace:*
+        version: link:..
       zod:
         specifier: ^3.22.4
         version: 3.25.76

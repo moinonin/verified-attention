@@ -34,6 +34,32 @@ export {
   type PolicyEvaluationResult,
 } from './policy.js';
 
+// Sprint 10: Extended policy types
+export type {
+  PolicyType,
+  EvidenceRequirement,
+  ConfidenceThresholds,
+  FraudLimitPolicy,
+  SessionConstraintPolicy,
+  PolicyConfig as ExtendedPolicyConfig,
+  PolicyStore as ExtendedPolicyStore,
+  PolicyEvaluationInput as ExtendedPolicyEvaluationInput,
+  PolicyEvaluationResult as ExtendedPolicyEvaluationResult,
+} from './policy/types.js';
+
+export {
+  EvidenceRequirementSchema,
+  ConfidenceThresholdsSchema,
+  FraudLimitPolicySchema,
+  SessionConstraintPolicySchema,
+  PolicyConfigSchema as ExtendedPolicyConfigSchema,
+  DEFAULT_VERIFICATION_POLICY,
+  HIGH_TRUST_VERIFICATION_POLICY,
+  LOW_FRICTION_VERIFICATION_POLICY,
+  InMemoryPolicyStore as ExtendedInMemoryPolicyStore,
+  evaluatePolicy as evaluateExtendedPolicy,
+} from './policy/types.js';
+
 // Verification outcomes
 export {
   OutcomeSemantics,
