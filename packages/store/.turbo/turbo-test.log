@@ -5,10 +5,11 @@
 
  RUN  v1.6.1 /Users/nickrotich/Desktop/portfolio/projects/python/verified-attention/packages/store
 
- ✓ src/evidence-store.test.ts  (23 tests) 6ms
+ ✓ src/evidence-store.test.ts  (23 tests) 8ms
+ ✓ verification-audit/src/index.test.ts  (14 tests) 5ms
 
- Test Files  1 passed (1)
-      Tests  23 passed (23)
-   Start at  00:35:43
-   Duration  778ms (transform 97ms, setup 0ms, collect 140ms, tests 6ms, environment 0ms, prepare 106ms)
+ Test Files  2 passed (2)
+      Tests  37 passed (37)
+   Start at  01:02:17
+   Duration  677ms (transform 359ms, setup 0ms, collect 560ms, tests 13ms, environment 0ms, prepare 306ms)
 

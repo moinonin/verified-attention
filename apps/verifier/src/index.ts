@@ -11,3 +11,13 @@ export type { ReviewItem, CreateReviewItemInput, ReviewDecisionInput, ReviewQueu
 // Re-export replay
 export { InMemoryReplayService, getReplayService, setReplayService, replayVerification } from './replay/index.js';
 export type { ReplayRequest, ReplayResult } from './replay/index.js';
+
+// Re-export proof generation
+export { 
+  InMemoryProofStorage, 
+  InMemoryProofGenerationPipeline, 
+  getProofGenerationPipeline, 
+  setProofGenerationPipeline, 
+  generateProof 
+} from './proof-gen/index.js';
+export type { ProofGenerationJob, ProofGenerationResult, ProofQueueStats, ProofGenerationPipeline, ProofStorage, ProofSigner } from './proof-gen/index.js';

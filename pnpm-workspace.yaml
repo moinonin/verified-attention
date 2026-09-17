@@ -4,4 +4,6 @@ packages:
   - packages/observability/*
   - packages/ml/**
   - packages/store/**
+  - packages/crypto/**
+  - packages/reward/**
   - apps/*

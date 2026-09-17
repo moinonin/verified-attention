@@ -23,6 +23,8 @@
   },
   "dependencies": {
     "@verified-attention/core": "workspace:*",
+    "@verified-attention/verification": "workspace:*",
+    "@verified-attention/verifier": "workspace:*",
     "zod": "^3.22.4"
   },
   "devDependencies": {

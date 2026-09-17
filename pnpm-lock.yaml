@@ -47,6 +47,12 @@ importers:
       '@verified-attention/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@verified-attention/verification':
+        specifier: workspace:*
+        version: link:../../packages/verification
+      '@verified-attention/verifier':
+        specifier: workspace:*
+        version: link:../verifier
       zod:
         specifier: ^3.22.4
         version: 3.25.76
@@ -69,6 +75,9 @@ importers:
       '@verified-attention/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@verified-attention/crypto-hsm':
+        specifier: workspace:*
+        version: link:../../packages/crypto/hsm
       '@verified-attention/store-verification-audit':
         specifier: workspace:*
         version: link:../../packages/store/verification-audit
@@ -90,6 +99,25 @@ importers:
         version: 5.9.3
       vitest:
         specifier: ^1.0.0
+        version: 1.6.1(@types/node@20.19.43)
+
+  packages/auth:
+    dependencies:
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: ^20.19.43
+        version: 20.19.43
+      tsdown:
+        specifier: ^0.11.13
+        version: 0.11.13(typescript@5.9.3)
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: ^1.6.1
         version: 1.6.1(@types/node@20.19.43)
 
   packages/conformance:
@@ -119,6 +147,28 @@ importers:
 
   packages/core:
     dependencies:
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: ^20.10.0
+        version: 20.19.43
+      tsdown:
+        specifier: ^0.11.0
+        version: 0.11.13(typescript@5.9.3)
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+      vitest:
+        specifier: ^1.0.0
+        version: 1.6.1(@types/node@20.19.43)
+
+  packages/crypto/hsm:
+    dependencies:
+      '@verified-attention/core':
+        specifier: workspace:*
+        version: link:../../core
       zod:
         specifier: ^3.22.4
         version: 3.25.76
@@ -326,6 +376,50 @@ importers:
         specifier: ^2.0.0
         version: 2.1.9(@types/node@20.19.43)
 
+  packages/observability/alerting:
+    dependencies:
+      '@verified-attention/observability-pipeline-metrics':
+        specifier: workspace:*
+        version: link:../pipeline-metrics
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: ^20.10.0
+        version: 20.19.43
+      tsdown:
+        specifier: ^0.11.0
+        version: 0.11.13(typescript@5.9.3)
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+      vitest:
+        specifier: ^1.0.0
+        version: 1.6.1(@types/node@20.19.43)
+
+  packages/observability/ops-metrics:
+    dependencies:
+      '@verified-attention/observability-pipeline-metrics':
+        specifier: workspace:*
+        version: link:../pipeline-metrics
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: ^20.10.0
+        version: 20.19.43
+      tsdown:
+        specifier: ^0.11.0
+        version: 0.11.13(typescript@5.9.3)
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+      vitest:
+        specifier: ^1.0.0
+        version: 1.6.1(@types/node@20.19.43)
+
   packages/observability/pipeline-metrics:
     devDependencies:
       tsdown:
@@ -340,6 +434,28 @@ importers:
 
   packages/observability/tracing:
     devDependencies:
+      tsdown:
+        specifier: ^0.11.0
+        version: 0.11.13(typescript@5.9.3)
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+      vitest:
+        specifier: ^1.0.0
+        version: 1.6.1(@types/node@20.19.43)
+
+  packages/observability/tracing-ui:
+    dependencies:
+      '@verified-attention/observability-tracing':
+        specifier: workspace:*
+        version: link:../tracing
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: ^20.10.0
+        version: 20.19.43
       tsdown:
         specifier: ^0.11.0
         version: 0.11.13(typescript@5.9.3)
@@ -469,6 +585,143 @@ importers:
       zod:
         specifier: ^3.22.0
         version: 3.25.76
+
+  packages/reward/budget:
+    dependencies:
+      '@verified-attention/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@verified-attention/reward-campaigns':
+        specifier: workspace:*
+        version: link:../campaigns
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: ^20.10.0
+        version: 20.19.43
+      tsdown:
+        specifier: ^0.11.0
+        version: 0.11.13(typescript@5.9.3)
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+      vitest:
+        specifier: ^1.0.0
+        version: 1.6.1(@types/node@20.19.43)
+
+  packages/reward/campaigns:
+    dependencies:
+      '@verified-attention/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@verified-attention/verification':
+        specifier: workspace:*
+        version: link:../../verification
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: ^20.10.0
+        version: 20.19.43
+      tsdown:
+        specifier: ^0.11.0
+        version: 0.11.13(typescript@5.9.3)
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+      vitest:
+        specifier: ^1.0.0
+        version: 1.6.1(@types/node@20.19.43)
+
+  packages/reward/eligibility:
+    dependencies:
+      '@verified-attention/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@verified-attention/store-verification-audit':
+        specifier: workspace:*
+        version: link:../../store/verification-audit
+      '@verified-attention/verification':
+        specifier: workspace:*
+        version: link:../../verification
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: ^20.10.0
+        version: 20.19.43
+      tsdown:
+        specifier: ^0.11.0
+        version: 0.11.13(typescript@5.9.3)
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+      vitest:
+        specifier: ^1.0.0
+        version: 1.6.1(@types/node@20.19.43)
+
+  packages/reward/pricing:
+    dependencies:
+      '@verified-attention/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@verified-attention/verification':
+        specifier: workspace:*
+        version: link:../../verification
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: ^20.10.0
+        version: 20.19.43
+      tsdown:
+        specifier: ^0.11.0
+        version: 0.11.13(typescript@5.9.3)
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+      vitest:
+        specifier: ^1.0.0
+        version: 1.6.1(@types/node@20.19.43)
+
+  packages/reward/settlement:
+    dependencies:
+      '@verified-attention/core':
+        specifier: workspace:*
+        version: link:../../core
+      '@verified-attention/reward-budget':
+        specifier: workspace:*
+        version: link:../budget
+      '@verified-attention/reward-campaigns':
+        specifier: workspace:*
+        version: link:../campaigns
+      '@verified-attention/reward-eligibility':
+        specifier: workspace:*
+        version: link:../eligibility
+      '@verified-attention/reward-pricing':
+        specifier: workspace:*
+        version: link:../pricing
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.76
+    devDependencies:
+      '@types/node':
+        specifier: ^20.10.0
+        version: 20.19.43
+      tsdown:
+        specifier: ^0.11.0
+        version: 0.11.13(typescript@5.9.3)
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+      vitest:
+        specifier: ^1.0.0
+        version: 1.6.1(@types/node@20.19.43)
 
   packages/store:
     dependencies:

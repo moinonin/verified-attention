@@ -1,19 +1,23 @@
 /**
- * Policy CRUD API (VAE Sprint 10)
+ * Policy CRUD API (VAE Sprint 10/11)
  *
  * REST endpoints for managing verification policies.
- * Follows the existing router pattern from sessions/router.ts
+ * Uses extended policy types from @verified-attention/verification
  */
 
 import {
-  PolicyConfig,
+  PolicyConfigSchema,
   PolicyType,
-  PolicyStore,
-  InMemoryPolicyStore,
-  DEFAULT_VERIFICATION_POLICY,
-  HIGH_TRUST_VERIFICATION_POLICY,
-  LOW_FRICTION_VERIFICATION_POLICY,
+  DEFAULT_POLICY,
+  HIGH_TRUST_POLICY,
+  LOW_FRICTION_POLICY,
   evaluatePolicy,
+  InMemoryPolicyStore,
+} from '@verified-attention/verification';
+
+import type {
+  PolicyConfig,
+  PolicyStore,
   PolicyEvaluationInput,
   PolicyEvaluationResult,
 } from '@verified-attention/verification';
@@ -30,12 +34,12 @@ export interface RouteRequest {
 }
 
 // Policy store instance (in production, this would be persisted)
-const policyStore: PolicyStore = new InMemoryPolicyStore();
+const policyStore: InMemoryPolicyStore = new InMemoryPolicyStore();
 
-// Initialize with default policies
-policyStore.createPolicy(DEFAULT_VERIFICATION_POLICY);
-policyStore.createPolicy(HIGH_TRUST_VERIFICATION_POLICY);
-policyStore.createPolicy(LOW_FRICTION_VERIFICATION_POLICY);
+// Initialize with default policies (using old policy format)
+policyStore.createPolicy(DEFAULT_POLICY);
+policyStore.createPolicy(HIGH_TRUST_POLICY);
+policyStore.createPolicy(LOW_FRICTION_POLICY);
 
 const POLICIES_PREFIX = '/v1/policies';
 
@@ -151,22 +155,33 @@ function createPolicy(body: unknown): HttpResponse {
   }
 
   try {
-    const policy: PolicyConfig = {
+    const result = PolicyConfigSchema.safeParse({
       policyId: policyData.policyId as string,
       name: policyData.name as string,
-      type: (policyData.type as PolicyType) ?? PolicyType.VERIFICATION,
       description: policyData.description as string | undefined,
       version: (policyData.version as number) ?? 1,
-      evidenceRequirements: policyData.evidenceRequirements as PolicyConfig['evidenceRequirements'],
-      confidenceThresholds: policyData.confidenceThresholds as PolicyConfig['confidenceThresholds'],
-      fraudLimits: policyData.fraudLimits as PolicyConfig['fraudLimits'],
-      sessionConstraints: policyData.sessionConstraints as PolicyConfig['sessionConstraints'],
-      createdAt: new Date().toISOString(),
+      requiredEvidenceTypes: policyData.requiredEvidenceTypes,
+      passThreshold: policyData.passThreshold,
+      failThreshold: policyData.failThreshold,
+      minEvidenceCount: policyData.minEvidenceCount,
+      fraudScoreThreshold: policyData.fraudScoreThreshold,
+      maxSessionDurationMs: policyData.maxSessionDurationMs,
+      minSessionDurationMs: policyData.minSessionDurationMs,
+      contradictionMultiplier: policyData.contradictionMultiplier,
+      fraudMultiplier: policyData.fraudMultiplier,
+      allowManualReview: policyData.allowManualReview,
       active: true,
-    };
+    });
 
-    policyStore.createPolicy(policy);
-    return { status: 201, body: { policy } };
+    if (!result.success) {
+      return {
+        status: 400,
+        body: { error: { code: 'VALIDATION_ERROR', message: result.error.message } },
+      };
+    }
+
+    policyStore.createPolicy(result.data);
+    return { status: 201, body: { policy: result.data } };
   } catch (error) {
     return {
       status: 400,
@@ -232,12 +247,12 @@ function evaluatePolicyEndpoint(policyId: string, body: unknown): HttpResponse {
 
   const input = body as PolicyEvaluationInput;
 
-  // Validate input
+  // Validate input (using old interface fields)
   if (!input.evidenceTypes || !Array.isArray(input.evidenceTypes)) {
     return { status: 400, body: { error: { code: 'INVALID_INPUT', message: 'evidenceTypes array required' } } };
   }
-  if (!input.evidenceCounts || typeof input.evidenceCounts !== 'object') {
-    return { status: 400, body: { error: { code: 'INVALID_INPUT', message: 'evidenceCounts object required' } } };
+  if (typeof input.evidenceCount !== 'number') {
+    return { status: 400, body: { error: { code: 'INVALID_INPUT', message: 'evidenceCount required' } } };
   }
   if (typeof input.sessionDurationMs !== 'number') {
     return { status: 400, body: { error: { code: 'INVALID_INPUT', message: 'sessionDurationMs required' } } };

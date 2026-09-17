@@ -25,6 +25,7 @@
     "@verified-attention/core": "workspace:*",
     "@verified-attention/verification": "workspace:*",
     "@verified-attention/store-verification-audit": "workspace:*",
+    "@verified-attention/crypto-hsm": "workspace:*",
     "zod": "^3.22.4"
   },
   "devDependencies": {

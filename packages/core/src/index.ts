@@ -46,31 +46,13 @@ export {
   SessionStateSchema,
   EvidenceState,       // canonical export from common.ts
   EvidenceStateSchema, // canonical export from common.ts
-  // Types
-  type Timestamp,
-  type UUID,
-  type URN,
-  type EvidenceId,
-  type SessionId,
-  type ClaimId,
-  type ProofId,
-  type ContentId,
-  type VerifierId,
-  type PolicyId,
-  type SourceId,
-  type Confidence,
-  type Hash,
-  type Signature,
-  type PublicKey,
-  type BaseMetadata,
-  type ZodIssue,
-  // Functions
-  zodIssuesToPlain,
-  computeIntegrityHash,
-  assertDeterministicConfidence,
-  generateURN,
-  parseURN
 } from './common';
+
+// Proof types (VAP Section 10)
+export {
+  ProofState,
+  ProofStateSchema,
+} from './proof';
 
 // Observation (VAP Section 4) — no collisions with common
 export {
@@ -162,8 +144,6 @@ export {
 
 // Proof of Attention (VAP Section 10)
 export {
-  ProofStateSchema,
-  ProofState,
   ProofMetadataSchema,
   ProofSchema,
   ProofValidationResultSchema,
