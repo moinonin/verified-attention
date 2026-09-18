@@ -8,6 +8,7 @@ describe('VerifiedAttention', () => {
       contentId: 'article_12345',
       onProof: vi.fn(),
       autoStart: false,
+      manifestVersion: 'v3',
     });
     expect(va).toBeInstanceOf(VerifiedAttention);
   });
@@ -18,6 +19,7 @@ describe('VerifiedAttention', () => {
       contentId: 'article_12345',
       onProof: vi.fn(),
       autoStart: false,
+      manifestVersion: 'v3',
     });
     const sessionId = va.startSession();
     expect(sessionId).toMatch(/^urn:vap:session:/);
@@ -30,6 +32,7 @@ describe('VerifiedAttention', () => {
       contentId: 'article_12345',
       onProof: vi.fn(),
       autoStart: false,
+      manifestVersion: 'v3',
     });
     const sessionId = va.startSession();
     expect(va.getSessionId()).toBe(sessionId);
