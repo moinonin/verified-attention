@@ -7,4 +7,5 @@ packages:
   - packages/crypto/**
   - packages/reward/**
   - packages/privacy/*
+  - packages/sdk/*
   - apps/*
