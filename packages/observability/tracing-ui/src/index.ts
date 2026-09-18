@@ -107,7 +107,7 @@ export class TracingUIEngine implements TracingUI {
   }
 
   queryTraces(query: TraceQuery): TraceResult {
-    let matchingTraces: Array<{ traceId: string; spans: TraceSpan[] }> = [];
+    const matchingTraces: Array<{ traceId: string; spans: TraceSpan[] }> = [];
 
     for (const [traceId, spans] of this.spans) {
       const rootSpan = spans.find(s => !s.parentSpanId);
@@ -126,7 +126,9 @@ export class TracingUIEngine implements TracingUI {
     }
 
     matchingTraces.sort((a, b) => {
-      return new Date(b.spans[0].startTime).getTime() - new Date(a.spans[0].startTime).getTime();
+      const aStart = a.spans[0]?.startTime ?? '';
+      const bStart = b.spans[0]?.startTime ?? '';
+      return new Date(bStart).getTime() - new Date(aStart).getTime();
     });
 
     const total = matchingTraces.length;
@@ -135,7 +137,7 @@ export class TracingUIEngine implements TracingUI {
     const page = matchingTraces.slice(offset, offset + limit);
 
     const traces = page.map(({ traceId, spans }) => {
-      const rootSpan = spans.find(s => !s.parentSpanId) || spans[0];
+      const rootSpan = spans.find(s => !s.parentSpanId) ?? spans[0]!;
       return {
         traceId,
         rootSpan,
@@ -200,7 +202,7 @@ export class TracingUIEngine implements TracingUI {
   private percentile(data: number[], p: number): number {
     if (data.length === 0) return 0;
     const index = Math.ceil(p * data.length) - 1;
-    return data[Math.max(0, index)];
+    return data[Math.max(0, index)] ?? 0;
   }
 }
 

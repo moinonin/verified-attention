@@ -819,6 +819,19 @@ git commit -m "feat: add new evidence type for video engagement"
 # 5. Push & open PR
 ```
 
+### Deployment / Cluster (Docker Compose)
+
+```bash
+# Start all services (api + verifier + settlement-worker + postgres + redis + jaeger)
+make start-cluster
+
+# Stop and clean all containers
+make stop-cluster
+
+# Verify full cluster health
+make help  # shows start-cluster / stop-cluster targets
+```
+
 ### Code Standards
 
 - TypeScript strict mode

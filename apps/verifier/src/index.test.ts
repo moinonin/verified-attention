@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { InMemoryReviewQueue, getReviewQueue, setReviewQueue, type CreateReviewItemInput } from './review-queue/index.js';
-import { InMemoryReplayService, getReplayService, setReplayService, replayVerification, type ReplayRequest } from './replay/index.js';
+import { InMemoryReplayService, getReplayService, setReplayService } from './replay/index.js';
 
 describe('InMemoryReviewQueue', () => {
   let queue: InMemoryReviewQueue;

@@ -9,7 +9,7 @@ import type { Proof } from '@verified-attention/core';
 
 vi.mock('crypto', () => ({
   createHmac: () => ({
-    update: () => ({ digest: () => 'mocksignature123' }),
+    update: () => ({ digest: () => 'a'.repeat(64) }),
   }),
 }));
 
@@ -55,14 +55,14 @@ describe('Webhook Delivery', () => {
   });
 
   it('builds webhook signature', () => {
-    const signature = buildWebhookSignature('{\"test\":true}', '2024-01-01T00:00:00.000Z', 'secret');
+    const signature = buildWebhookSignature('{"test":true}', '2024-01-01T00:00:00.000Z', 'secret');
     expect(signature).toBeDefined();
     expect(typeof signature).toBe('string');
     expect(signature).toHaveLength(64); // SHA256 hex
   });
 
   it('builds webhook headers', () => {
-    const headers = buildWebhookHeaders('del-1', '{\"test\":true}', 'secret');
+    const headers = buildWebhookHeaders('del-1', '{"test":true}', 'secret');
     expect(headers).toHaveProperty('Content-Type', 'application/json');
     expect(headers).toHaveProperty('X-Webhook-Id', 'del-1');
     expect(headers).toHaveProperty('X-Webhook-Timestamp');

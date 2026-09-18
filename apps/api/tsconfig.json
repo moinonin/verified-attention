@@ -8,7 +8,6 @@
     "declarationMap": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "./src",
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
@@ -18,17 +17,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "verbatimModuleSyntax": true,
-    "types": ["node"],
+    "types": ["node", "express"],
     "baseUrl": ".",
     "paths": {
       "@verified-attention/*": ["../../packages/*/src"]
     }
   },
-  "references": [
-    { "path": "../../packages/verification" },
-    { "path": "../../packages/core" },
-    { "path": "../../packages/crypto/hsm" }
-  ],
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
 }

@@ -203,7 +203,7 @@ export class OpsMetricsEngine implements OpsMetrics {
     if (data.length === 0) return 0;
     const sorted = [...data].sort((a, b) => a - b);
     const index = Math.ceil(p * sorted.length) - 1;
-    return sorted[Math.max(0, index)];
+    return sorted[Math.max(0, index)] ?? 0;
   }
 }
 

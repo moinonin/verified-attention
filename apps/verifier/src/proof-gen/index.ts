@@ -202,7 +202,7 @@ class InMemoryProofGenerationPipelineImpl implements ProofGenerationPipeline {
           evidenceCount: job.evidenceCount,
           sessionDurationMs: 0,
         },
-        baseMetadata: {},
+        baseMetadata: { createdAt: new Date().toISOString(), version: 1 },
       };
 
       // Sign the proof
@@ -373,7 +373,7 @@ async function generateProofImpl(
 
   await pipeline.enqueue(job);
   const results = await pipeline.processBatch(1);
-  return results[0];
+  return results[0]!;
 }
 
 // ─── Public Exports ──────────────────────────────────────────────────────────

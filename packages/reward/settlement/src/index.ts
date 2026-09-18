@@ -58,7 +58,6 @@ export const LedgerEntrySchema = z.object({
   campaignId: z.string().optional(),
   rewardId: z.string().optional(),
   budgetId: z.string().optional(),
-  settlementId: z.string().min(1),
   // Description
   description: z.string(),
   // Balance after this entry
@@ -123,7 +122,6 @@ export const RewardPayoutSchema = z.object({
   currency: z.string().length(3).default('USD'),
   // References
   proofId: z.string().min(1),
-  campaignId: z.string().min(1),
   verifierId: z.string().min(1),
   contentId: z.string().min(1),
   sessionId: z.string().min(1),
@@ -492,7 +490,7 @@ export class InMemorySettlementEngine implements SettlementEngine {
   }
 
   getPayoutsByRecipient(recipientId: string, dateFrom?: string, dateTo?: string): RewardPayout[] {
-    let payouts: RewardPayout[] = [];
+    const payouts: RewardPayout[] = [];
     for (const settlementPayouts of this.payouts.values()) {
       payouts.push(...settlementPayouts);
     }
@@ -550,8 +548,8 @@ export class InMemorySettlementEngine implements SettlementEngine {
       netPayoutMicros,
       totalRewardCount,
       uniqueRecipients: allRecipients.size,
-      periodStart: settlements.length > 0 ? settlements[0].periodStart : new Date().toISOString(),
-      periodEnd: settlements.length > 0 ? settlements[settlements.length - 1].periodEnd : new Date().toISOString(),
+      periodStart: settlements.length > 0 ? settlements[0]!.periodStart : new Date().toISOString(),
+      periodEnd: settlements.length > 0 ? settlements[settlements.length - 1]!.periodEnd : new Date().toISOString(),
     };
   }
 
@@ -575,7 +573,6 @@ export class InMemorySettlementEngine implements SettlementEngine {
         campaignId: settlement.campaignId,
         rewardId: payout.payoutId,
         budgetId: undefined,
-        settlementId: settlement.settlementId,
         description: `Reward payout for ${payout.payoutId}`,
         balanceAfterMicros: 0, // Would need running balance
       });
@@ -592,7 +589,6 @@ export class InMemorySettlementEngine implements SettlementEngine {
         campaignId: settlement.campaignId,
         rewardId: payout.payoutId,
         budgetId: undefined,
-        settlementId: settlement.settlementId,
         description: `Payable for reward ${payout.payoutId}`,
         balanceAfterMicros: 0,
       });
@@ -611,7 +607,6 @@ export class InMemorySettlementEngine implements SettlementEngine {
           campaignId: settlement.campaignId,
           rewardId: payout.payoutId,
           budgetId: undefined,
-          settlementId: settlement.settlementId,
           description: `Platform fee for reward ${payout.payoutId}`,
           balanceAfterMicros: 0,
         });
@@ -628,7 +623,6 @@ export class InMemorySettlementEngine implements SettlementEngine {
           campaignId: settlement.campaignId,
           rewardId: payout.payoutId,
           budgetId: undefined,
-          settlementId: settlement.settlementId,
           description: `Fee payable for reward ${payout.payoutId}`,
           balanceAfterMicros: 0,
         });
@@ -684,7 +678,7 @@ export class InMemorySettlementEngine implements SettlementEngine {
     settlement: Settlement,
     payouts: RewardPayout[],
     ledgerEntries: LedgerEntry[],
-    options: { fields?: string[] }
+    _options: { fields?: string[] }
   ): string {
     const output = {
       settlement,

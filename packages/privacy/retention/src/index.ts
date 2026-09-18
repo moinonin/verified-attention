@@ -115,6 +115,8 @@ const DEFAULT_POLICIES: Omit<RetentionPolicy, 'id' | 'createdAt' | 'updatedAt'>[
     classification: 'EVIDENCE',
     retentionPeriod: { type: 'FIXED', days: 90 },
     expiryAction: 'ANONYMISE',
+    legalHold: false,
+    gracePeriodDays: 0,
     description: 'Evidence retained for 90 days then anonymised',
     jurisdiction: ['GDPR', 'CCPA'],
   },
@@ -123,6 +125,8 @@ const DEFAULT_POLICIES: Omit<RetentionPolicy, 'id' | 'createdAt' | 'updatedAt'>[
     classification: 'PROOF',
     retentionPeriod: { type: 'FIXED', years: 7 },
     expiryAction: 'ARCHIVE',
+    legalHold: false,
+    gracePeriodDays: 0,
     description: 'Proofs retained for 7 years for legal compliance',
     jurisdiction: ['GDPR', 'CCPA', 'SOX'],
   },
@@ -131,6 +135,8 @@ const DEFAULT_POLICIES: Omit<RetentionPolicy, 'id' | 'createdAt' | 'updatedAt'>[
     classification: 'SESSION',
     retentionPeriod: { type: 'FIXED', days: 90 },
     expiryAction: 'DELETE',
+    legalHold: false,
+    gracePeriodDays: 0,
     description: 'Sessions retained for 90 days',
     jurisdiction: ['GDPR', 'CCPA'],
   },
@@ -139,6 +145,8 @@ const DEFAULT_POLICIES: Omit<RetentionPolicy, 'id' | 'createdAt' | 'updatedAt'>[
     classification: 'ANALYTICS',
     retentionPeriod: { type: 'INFINITE' },
     expiryAction: 'NOTIFY',
+    legalHold: false,
+    gracePeriodDays: 0,
     description: 'Aggregated analytics retained indefinitely (no PII)',
     jurisdiction: ['GDPR'],
   },
@@ -147,6 +155,8 @@ const DEFAULT_POLICIES: Omit<RetentionPolicy, 'id' | 'createdAt' | 'updatedAt'>[
     classification: 'PERSONAL_DATA',
     retentionPeriod: { type: 'FIXED', days: 30 },
     expiryAction: 'DELETE',
+    legalHold: false,
+    gracePeriodDays: 0,
     description: 'Personal data minimal retention',
     jurisdiction: ['GDPR', 'CCPA', 'LGPD'],
   },
@@ -155,6 +165,8 @@ const DEFAULT_POLICIES: Omit<RetentionPolicy, 'id' | 'createdAt' | 'updatedAt'>[
     classification: 'CONSENT',
     retentionPeriod: { type: 'FIXED', years: 5 },
     expiryAction: 'ARCHIVE',
+    legalHold: false,
+    gracePeriodDays: 0,
     description: 'Consent records retained for 5 years for compliance proof',
     jurisdiction: ['GDPR', 'CCPA'],
   },
@@ -163,6 +175,8 @@ const DEFAULT_POLICIES: Omit<RetentionPolicy, 'id' | 'createdAt' | 'updatedAt'>[
     classification: 'AUDIT_LOG',
     retentionPeriod: { type: 'FIXED', years: 7 },
     expiryAction: 'ARCHIVE',
+    legalHold: false,
+    gracePeriodDays: 0,
     description: 'Audit logs retained for 7 years',
     jurisdiction: ['SOX', 'GDPR'],
   },
@@ -171,6 +185,8 @@ const DEFAULT_POLICIES: Omit<RetentionPolicy, 'id' | 'createdAt' | 'updatedAt'>[
     classification: 'SECURITY_LOG',
     retentionPeriod: { type: 'FIXED', months: 12 },
     expiryAction: 'DELETE',
+    legalHold: false,
+    gracePeriodDays: 0,
     description: 'Security logs retained for 12 months',
     jurisdiction: ['GDPR'],
   },
@@ -367,8 +383,8 @@ export class RetentionPolicyEngineImpl implements RetentionPolicyEngine {
       stats.byClassification[classification] = { retained: 0, scheduled: 0, deleted: 0 };
     }
 
-    for (const schedule of this.schedules.values()) {
-      const result = this.results.get(schedule.dataId);
+    for (const [dataId, schedule] of this.schedules.entries()) {
+      const result = this.results.get(dataId);
       if (result?.status === 'DELETED') {
         stats.deletedCount++;
         stats.byClassification[schedule.classification].deleted++;

@@ -1,21 +1,16 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { 
-  getSettlementEngine, 
-  setSettlementEngine, 
-  createSettlement, 
-  prepareSettlement, 
-  exportSettlement, 
+import {
+  setSettlementEngine,
+  createSettlement,
+  prepareSettlement,
+  exportSettlement,
   reconcileSettlement,
   getSettlementSummary,
   getLedgerEntriesByCampaign,
   getPayoutsByRecipient,
   InMemorySettlementEngine,
   type SettlementEngine,
-  type Settlement,
   type RewardPayout,
-  type ExportOptions,
-  type ReconciliationReport,
-  type LedgerEntry,
 } from './index';
 
 describe('Settlement Engine', () => {
@@ -84,7 +79,6 @@ describe('Settlement Engine', () => {
           verifierId: 'verifier-1',
           contentId: 'content-1',
           sessionId: 'session-1',
-          rewardId: 'payout-1',
           createdAt: new Date().toISOString(),
           status: 'PENDING',
         },
@@ -124,6 +118,7 @@ describe('Settlement Engine', () => {
         payoutId: 'payout-1',
         settlementId: 'non-existent',
         campaignId: 'campaign-1',
+        rewardId: 'payout-1',
         recipientId: 'viewer-1',
         recipientType: 'VIEWER',
         grossAmountMicros: 100000,
@@ -134,11 +129,10 @@ describe('Settlement Engine', () => {
         verifierId: 'verifier-1',
         contentId: 'content-1',
         sessionId: 'session-1',
-        rewardId: 'payout-1',
         createdAt: new Date().toISOString(),
         status: 'PENDING',
       }];
-      
+
       expect(() => engine.addPayoutsToSettlement('non-existent', payouts)).toThrow('not found');
     });
   });
@@ -151,6 +145,7 @@ describe('Settlement Engine', () => {
         payoutId: 'payout-1',
         settlementId: settlement.settlementId,
         campaignId: 'campaign-1',
+        rewardId: 'payout-1',
         recipientId: 'viewer-1',
         recipientType: 'VIEWER',
         grossAmountMicros: 100000,
@@ -161,11 +156,10 @@ describe('Settlement Engine', () => {
         verifierId: 'verifier-1',
         contentId: 'content-1',
         sessionId: 'session-1',
-        rewardId: 'payout-1',
         createdAt: new Date().toISOString(),
         status: 'PENDING',
       }];
-      
+
       engine.addPayoutsToSettlement(settlement.settlementId, payouts);
       const prepared = prepareSettlement(settlement.settlementId);
       
@@ -200,6 +194,7 @@ describe('Settlement Engine', () => {
         payoutId: 'payout-1',
         settlementId: settlement.settlementId,
         campaignId: 'campaign-1',
+        rewardId: 'payout-1',
         recipientId: 'viewer-1',
         recipientType: 'VIEWER',
         grossAmountMicros: 100000,
@@ -233,6 +228,7 @@ describe('Settlement Engine', () => {
         payoutId: 'payout-1',
         settlementId: settlement.settlementId,
         campaignId: 'campaign-1',
+        rewardId: 'payout-1',
         recipientId: 'viewer-1',
         recipientType: 'VIEWER',
         grossAmountMicros: 100000,
@@ -266,6 +262,7 @@ describe('Settlement Engine', () => {
         payoutId: 'payout-1',
         settlementId: settlement.settlementId,
         campaignId: 'campaign-1',
+        rewardId: 'payout-1',
         recipientId: 'viewer-1',
         recipientType: 'VIEWER',
         grossAmountMicros: 100000,
@@ -306,6 +303,7 @@ describe('Settlement Engine', () => {
         payoutId: 'payout-1',
         settlementId: settlement.settlementId,
         campaignId: 'campaign-1',
+        rewardId: 'payout-1',
         recipientId: 'viewer-1',
         recipientType: 'VIEWER',
         grossAmountMicros: 100000,
@@ -316,11 +314,10 @@ describe('Settlement Engine', () => {
         verifierId: 'verifier-1',
         contentId: 'content-1',
         sessionId: 'session-1',
-        rewardId: 'payout-1',
         createdAt: new Date().toISOString(),
         status: 'PENDING',
       }];
-      
+
       engine.addPayoutsToSettlement(settlement.settlementId, payouts);
       prepareSettlement(settlement.settlementId);
       const report = reconcileSettlement(settlement.settlementId);
@@ -340,6 +337,7 @@ describe('Settlement Engine', () => {
         payoutId: 'payout-1',
         settlementId: settlement.settlementId,
         campaignId: 'campaign-1',
+        rewardId: 'payout-1',
         recipientId: 'viewer-1',
         recipientType: 'VIEWER',
         grossAmountMicros: 100000,
@@ -350,7 +348,6 @@ describe('Settlement Engine', () => {
         verifierId: 'verifier-1',
         contentId: 'content-1',
         sessionId: 'session-1',
-        rewardId: 'payout-1',
         createdAt: new Date().toISOString(),
         status: 'PENDING',
       }];
@@ -394,6 +391,7 @@ describe('Settlement Engine', () => {
         payoutId: 'payout-1',
         settlementId: settlement1.settlementId,
         campaignId: 'campaign-1',
+        rewardId: 'payout-1',
         recipientId: 'viewer-1',
         recipientType: 'VIEWER',
         grossAmountMicros: 100000,
@@ -446,6 +444,7 @@ describe('Settlement Engine', () => {
           payoutId: 'payout-2',
           settlementId: settlement.settlementId,
           campaignId: 'campaign-1',
+          rewardId: 'payout-2',
           recipientId: 'viewer-1',
           recipientType: 'VIEWER',
           grossAmountMicros: 200000,
@@ -478,6 +477,7 @@ describe('Settlement Engine', () => {
         payoutId: 'payout-1',
         settlementId: settlement1.settlementId,
         campaignId: 'campaign-1',
+        rewardId: 'payout-1',
         recipientId: 'viewer-1',
         recipientType: 'VIEWER',
         grossAmountMicros: 100000,
@@ -490,12 +490,13 @@ describe('Settlement Engine', () => {
         sessionId: 'session-1',
         createdAt: new Date().toISOString(),
         status: 'PENDING',
-      }];
-      
-      const payouts2: RewardPayout[] = [{
+        }];
+
+        const payouts2: RewardPayout[] = [{
         payoutId: 'payout-2',
         settlementId: settlement2.settlementId,
         campaignId: 'campaign-1',
+        rewardId: 'payout-2',
         recipientId: 'viewer-2',
         recipientType: 'VIEWER',
         grossAmountMicros: 200000,

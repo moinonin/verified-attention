@@ -19,6 +19,8 @@ export interface HttpResponse {
   body: unknown;
 }
 
+import type { CreateSessionInput, UpdateSessionInput } from './store';
+
 const CreateSessionRequestSchema = z.object({
   contentId: ContentIdSchema,
   participant: SessionParticipantSchema,
@@ -32,6 +34,23 @@ const UpdateSessionRequestSchema = z.object({
   metadata: z.record(z.unknown()).optional()
 });
 
+function toCreateSessionInput(data: z.infer<typeof CreateSessionRequestSchema>): CreateSessionInput {
+  return {
+    contentId: data.contentId,
+    participant: data.participant as any,
+    config: data.config as any,
+    metadata: data.metadata,
+  };
+}
+
+function toUpdateSessionInput(data: z.infer<typeof UpdateSessionRequestSchema>): UpdateSessionInput {
+  return {
+    config: data.config as any,
+    participant: data.participant as any,
+    metadata: data.metadata,
+  };
+}
+
 export class SessionController {
   constructor(private readonly store: SessionStore = new SessionStore()) {}
 
@@ -40,7 +59,7 @@ export class SessionController {
     if (!parsed.success) {
       return { status: 400, body: errorBody('VALIDATION_ERROR', parsed.error.message) };
     }
-    const session = this.store.create(parsed.data);
+    const session = this.store.create(toCreateSessionInput(parsed.data));
     return { status: 201, body: session };
   }
 
@@ -60,7 +79,7 @@ export class SessionController {
       return { status: 400, body: errorBody('VALIDATION_ERROR', parsed.error.message) };
     }
     try {
-      const session = this.store.update(sessionId, parsed.data);
+      const session = this.store.update(sessionId, toUpdateSessionInput(parsed.data));
       return { status: 200, body: session };
     } catch (err) {
       return mapDomainError(err);

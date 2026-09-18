@@ -6,4 +6,5 @@ packages:
   - packages/store/**
   - packages/crypto/**
   - packages/reward/**
+  - packages/privacy/*
   - apps/*

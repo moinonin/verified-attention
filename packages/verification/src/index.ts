@@ -36,7 +36,6 @@ export {
 
 // Sprint 10: Extended policy types
 export type {
-  PolicyType,
   EvidenceRequirement,
   ConfidenceThresholds,
   FraudLimitPolicy,
@@ -46,6 +45,8 @@ export type {
   PolicyEvaluationInput as ExtendedPolicyEvaluationInput,
   PolicyEvaluationResult as ExtendedPolicyEvaluationResult,
 } from './policy/types.js';
+
+export { PolicyType } from './policy/types.js';
 
 export {
   EvidenceRequirementSchema,

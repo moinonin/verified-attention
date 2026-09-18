@@ -188,8 +188,8 @@ let _manager: AuthManager | null = null;
 export function getAuthManager(): AuthManager {
   if (!_manager) {
     _manager = new AuthManagerImpl();
-    _manager.registerProvider('api-key', new APIKeyAuthProvider({ provider: 'API_KEY', apiKeyHeader: 'X-API-Key' }));
-    _manager.registerProvider('jwt', new JWTAuthProvider({ provider: 'JWT', jwtAlgorithm: 'HS256' }));
+    _manager.registerProvider('api-key', new APIKeyAuthProvider({ provider: 'API_KEY', apiKeyHeader: 'X-API-Key', scopes: [], certRequired: false, jwtAlgorithm: 'HS256' }));
+    _manager.registerProvider('jwt', new JWTAuthProvider({ provider: 'JWT', jwtAlgorithm: 'HS256', scopes: [], apiKeyHeader: 'X-API-Key', certRequired: false }));
   }
   return _manager;
 }

@@ -47,8 +47,8 @@ export const PseudonymisedRecordSchema = z.object({
 export type PseudonymisedRecord = z.infer<typeof PseudonymisedRecordSchema>;
 
 export const PseudonymisationResultSchema = z.object({
-  originalData: Record<string, unknown>,
-  pseudonymisedData: Record<string, unknown>,
+  originalData: z.record(z.unknown()),
+  pseudonymisedData: z.record(z.unknown()),
   mappings: z.array(PseudonymisedRecordSchema),
   fieldsStripped: z.number().int().nonnegative(),
   fieldsPseudonymised: z.number().int().nonnegative(),
@@ -205,11 +205,11 @@ export class PseudonymisationServiceImpl implements PseudonymisationService {
 
     for (let i = 0; i < parts.length - 1; i++) {
       if (!current || typeof current !== 'object' || Array.isArray(current)) return;
-      current = current[parts[i]];
+      current = current[parts[i]!];
     }
 
     if (current && typeof current === 'object' && !(current instanceof Array)) {
-      delete current[parts[parts.length - 1]];
+      delete current[parts[parts.length - 1]!];
     }
   }
 
@@ -220,15 +220,15 @@ export class PseudonymisationServiceImpl implements PseudonymisationService {
     for (let i = 0; i < parts.length - 1; i++) {
       if (!current || typeof current !== 'object' || Array.isArray(current)) {
         // Create intermediate objects if they don't exist
-        current[parts[i]] = {};
-        current = current[parts[i]];
+        current[parts[i]!] = {};
+        current = current[parts[i]!];
         continue;
       }
-      current = current[parts[i]];
+      current = current[parts[i]!];
     }
 
     if (current && typeof current === 'object' && !(current instanceof Array)) {
-      current[parts[parts.length - 1]] = value;
+      current[parts[parts.length - 1]!] = value;
     }
   }
 

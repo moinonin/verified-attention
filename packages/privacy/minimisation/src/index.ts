@@ -83,11 +83,11 @@ function stripField(data: Record<string, unknown>, path: string): void {
 
   for (let i = 0; i < parts.length - 1; i++) {
     if (!current || typeof current !== 'object') return;
-    current = current[parts[i]];
+    current = current[parts[i]!];
   }
 
   if (current && typeof current === 'object') {
-    delete current[parts[parts.length - 1]];
+    delete current[parts[parts.length - 1]!];
   }
 }
 
@@ -97,10 +97,10 @@ function hashField(data: Record<string, unknown>, path: string): void {
 
   for (let i = 0; i < parts.length - 1; i++) {
     if (!current || typeof current !== 'object') return;
-    current = current[parts[i]];
+    current = current[parts[i]!];
   }
 
-  const fieldName = parts[parts.length - 1];
+  const fieldName = parts[parts.length - 1]!;
   if (current && fieldName in current) {
     const value = current[fieldName];
     if (typeof value === 'string') {

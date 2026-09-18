@@ -171,3 +171,19 @@ clean-venv: ## Remove .venv (forces recreation on next make)
 	@echo "$(YELLOW)[clean-venv] Removing .venv...$(RESET)"
 	@rm -rf $(VENV)
 	@echo "$(GREEN)[clean-venv] Done.$(RESET)"
+
+# ═════════════════════════════════════════════════════════════════════════════
+# Cluster (Docker Compose)
+# ═════════════════════════════════════════════════════════════════════════════
+
+.PHONY: start-cluster
+start-cluster: ## Start all services (api, verifier, settlement-worker, postgres, redis, jaeger)
+	@echo "$(BLUE)[cluster] Starting verified-attention cluster...$(RESET)"
+	@docker-compose up -d api verifier settlement-worker postgres redis jaeger
+	@echo "$(GREEN)[cluster] Cluster started. Check status: docker-compose ps$(RESET)"
+
+.PHONY: stop-cluster
+stop-cluster: ## Stop and remove all cluster containers
+	@echo "$(YELLOW)[cluster] Stopping verified-attention cluster...$(RESET)"
+	@docker-compose down --rmi all --volumes --remove-orphans || echo "$(YELLOW)[cluster] Some containers may not exist (safe).$(RESET)"
+	@echo "$(GREEN)[cluster] Cluster stopped and cleaned.$(RESET)"

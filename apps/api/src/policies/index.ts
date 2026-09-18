@@ -7,12 +7,12 @@
 
 import {
   PolicyConfigSchema,
-  PolicyType,
   DEFAULT_POLICY,
   HIGH_TRUST_POLICY,
   LOW_FRICTION_POLICY,
   evaluatePolicy,
   InMemoryPolicyStore,
+  PolicyType,
 } from '@verified-attention/verification';
 
 import type {
@@ -275,8 +275,8 @@ function getPolicyAuditLog(policyId: string): HttpResponse {
     return { status: 404, body: { error: { code: 'NOT_FOUND', message: `Policy ${policyId} not found` } } };
   }
 
-  // Cast to access the audit log method
-  const auditLog = (policyStore as InMemoryPolicyStore).getAuditLog(policyId);
+  // Retrieve the audit log for this policy
+  const auditLog = policyStore.getAuditLog();
 
   return {
     status: 200,

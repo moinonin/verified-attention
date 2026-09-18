@@ -235,8 +235,8 @@ export class InMemoryAuditLog implements AuditLog {
     const timestamps = entries.map((e) => new Date(e.timestamp).getTime()).sort((a, b) => a - b);
     const timeRange = timestamps.length > 0
       ? {
-          earliest: new Date(timestamps[0]).toISOString(),
-          latest: new Date(timestamps[timestamps.length - 1]).toISOString(),
+          earliest: new Date(timestamps[0]!).toISOString(),
+          latest: new Date(timestamps[timestamps.length - 1]!).toISOString(),
         }
       : null;
 
@@ -276,7 +276,7 @@ export class InMemoryAuditLog implements AuditLog {
           valid: false,
           brokenAt: i,
           totalChecked: i + 1,
-          firstEntryHash: orderedEntries[0].entryHash,
+          firstEntryHash: orderedEntries[0]!.entryHash,
           lastEntryHash: this.chainHead,
         };
       }
@@ -306,7 +306,7 @@ export class InMemoryAuditLog implements AuditLog {
           valid: false,
           brokenAt: i,
           totalChecked: i + 1,
-          firstEntryHash: orderedEntries[0].entryHash,
+          firstEntryHash: orderedEntries[0]!.entryHash,
           lastEntryHash: this.chainHead,
         };
       }
@@ -317,7 +317,7 @@ export class InMemoryAuditLog implements AuditLog {
     return {
       valid: true,
       totalChecked: orderedEntries.length,
-      firstEntryHash: orderedEntries[0].entryHash,
+      firstEntryHash: orderedEntries[0]!.entryHash,
       lastEntryHash: this.chainHead,
     };
   }

@@ -10,6 +10,11 @@
       "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./rbac": {
+      "import": "./rbac.js",
+      "require": "./rbac.js",
+      "types": "./rbac.d.ts"
     }
   },
   "scripts": {

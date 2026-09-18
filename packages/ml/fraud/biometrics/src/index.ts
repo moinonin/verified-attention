@@ -138,7 +138,6 @@ export function extractBiometricFeatures(evidence: Evidence[]): number[] {
   const pressures: number[] = [];
   
   let lastKeyTime = 0;
-  let lastMouseTime = 0;
   
   // Process each evidence item
   for (const e of evidence) {

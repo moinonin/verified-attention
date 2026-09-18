@@ -56,6 +56,8 @@ export interface WebhookStore {
 
 // ─── HMAC Signature ───────────────────────────────────────────────────────────
 
+import { createHmac } from 'node:crypto';
+
 export function buildWebhookSignature(
   payload: string,
   timestamp: string,
@@ -65,9 +67,7 @@ export function buildWebhookSignature(
   const key = encoder.encode(secret);
   const data = encoder.encode(`${timestamp}.${payload}`);
 
-  const crypto = require('crypto');
-  return crypto
-    .createHmac('sha256', key)
+  return createHmac('sha256', key)
     .update(data)
     .digest('hex');
 }
@@ -152,7 +152,7 @@ export class DeliverWebhook {
 
     if (results.length === 0) {
       // No matching endpoints — still record the delivery attempt
-      const noEndpointDelivery: WebhookDelivery = {
+    const noEndpointDelivery: WebhookDelivery = {
         ...delivery,
         endpointId: 'none',
         status: 'DEAD_LETTERED',
@@ -165,7 +165,7 @@ export class DeliverWebhook {
       return noEndpointDelivery;
     }
 
-    return results[0];
+    return results[0] as WebhookDelivery;
   }
 
   private async deliverToEndpoint(

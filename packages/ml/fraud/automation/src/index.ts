@@ -38,13 +38,13 @@ interface AutomationWindow extends Window {
   __selenium?: Record<string, unknown>;
   __webdriver?: Record<string, unknown>;
   __puppeteer?: Record<string, unknown>;
-  __driver_evaluate?: Function;
-  __webdriver_evaluate?: Function;
-  __selenium_evaluate?: Function;
-  __fxdriver_evaluate?: Function;
+  __driver_evaluate?: (...args: unknown[]) => unknown;
+  __webdriver_evaluate?: (...args: unknown[]) => unknown;
+  __selenium_evaluate?: (...args: unknown[]) => unknown;
+  __fxdriver_evaluate?: (...args: unknown[]) => unknown;
   __driver_unwrapped?: boolean;
   _pageBinding?: Record<string, unknown>;
-  callPhantom?: Function;
+  callPhantom?: (...args: unknown[]) => unknown;
   _phantom?: Record<string, unknown>;
   domAutomation?: boolean;
   domAutomationController?: boolean;
@@ -66,9 +66,9 @@ interface AutomationDocument extends Document {
     getAttribute?(name: string): string | null;
     webdriver?: boolean;
     driverName?: string;
-    __selenium_evaluate?: Function;
-    __webdriver_evaluate?: Function;
-    __fxdriver_evaluate?: Function;
+    __selenium_evaluate?: (...args: unknown[]) => unknown;
+    __webdriver_evaluate?: (...args: unknown[]) => unknown;
+    __fxdriver_evaluate?: (...args: unknown[]) => unknown;
   };
   $cdc_asdjflasutopfhvcZLmcfl_?: unknown;
   $wdc_?: unknown;
@@ -114,7 +114,7 @@ export interface ClientData {
     __selenium?: Record<string, unknown>;
     __webdriver?: Record<string, unknown>;
     __puppeteer?: Record<string, unknown>;
-    callPhantom?: Function;
+    callPhantom?: (...args: unknown[]) => unknown;
     _phantom?: Record<string, unknown>;
     domAutomation?: boolean;
     domAutomationController?: boolean;
@@ -126,11 +126,11 @@ export interface ClientData {
     };
   };
   console: {
-    debug?: Function;
-    info?: Function;
-    log?: Function;
-    warn?: Function;
-    error?: Function;
+    debug?: (...args: unknown[]) => unknown;
+    info?: (...args: unknown[]) => unknown;
+    log?: (...args: unknown[]) => unknown;
+    warn?: (...args: unknown[]) => unknown;
+    error?: (...args: unknown[]) => unknown;
   };
   performance: {
     timing?: {
@@ -210,7 +210,7 @@ function extractClientData(evidence: Evidence[]): ClientData {
         if (win.__selenium) clientData.window.__selenium = win.__selenium as Record<string, unknown>;
         if (win.__webdriver) clientData.window.__webdriver = win.__webdriver as Record<string, unknown>;
         if (win.__puppeteer) clientData.window.__puppeteer = win.__puppeteer as Record<string, unknown>;
-        if (typeof win.callPhantom === 'function') clientData.window.callPhantom = win.callPhantom;
+        if (typeof win.callPhantom === 'function') clientData.window.callPhantom = win.callPhantom as (...args: unknown[]) => unknown;
         if (win._phantom) clientData.window._phantom = win._phantom as Record<string, unknown>;
         if (typeof win.domAutomation === 'boolean') clientData.window.domAutomation = win.domAutomation;
         if (typeof win.domAutomationController === 'boolean') clientData.window.domAutomationController = win.domAutomationController;
@@ -817,13 +817,13 @@ export async function detectAutomationFromClientData(clientData: ClientData): Pr
   // High confidence signal = automated
   // 2+ medium confidence = automated  
   // 4+ low confidence = automated
-  const isAutomated = highConfidenceSignals.length > 0 || 
+  const isAutomated = highConfidenceSignals.length > 0 ||
                       mediumConfidenceSignals.length >= 2 ||
                       lowConfidenceSignals.length >= 4 ||
                       detectedSignals.length >= 5;
 
   // Overall confidence
-  let confidence = 0;
+  let confidence: number;
   if (isAutomated) {
     const maxConf = Math.max(...detectedSignals.map(s => s.confidence));
     const avgConf = detectedSignals.reduce((sum, s) => sum + s.confidence, 0) / detectedSignals.length;

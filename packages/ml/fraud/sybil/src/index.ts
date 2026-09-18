@@ -440,7 +440,7 @@ function mergeOverlappingClusters(clusters: SybilCluster[]): SybilCluster[] {
   for (let i = 0; i < clusters.length; i++) {
     if (used.has(i)) continue;
     
-    let current = { ...clusters[i] };
+    const current = { ...clusters[i] };
     const currentSessions = new Set(current.sessions);
     
     for (let j = i + 1; j < clusters.length; j++) {

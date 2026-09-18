@@ -196,5 +196,4 @@ export function setAlertRuleEngine(engine: AlertRuleEngine): void {
 }
 
 // ─── AlertRule type re-export ─────────────────────────────────────────────────
-
-export type { Alert, AlertRule, AlertSeverity, AlertChannel };
+// (types already exported above via const/runtime exports)

@@ -8,6 +8,9 @@ import type { Request, Response, NextFunction } from 'express';
 import { getAuthManager } from '@verified-attention/auth';
 import { getRBAC, type UserContext } from '@verified-attention/auth/rbac';
 
+/** An Express Request carrying an authenticated user context (set by authMiddleware). */
+type AuthedRequest = Request & { user?: { principalId: string; scopes: string[] } };
+
 // ─── Security Headers ─────────────────────────────────────────────────────────
 
 export const SECURITY_HEADERS = {
@@ -15,8 +18,7 @@ export const SECURITY_HEADERS = {
   'X-Frame-Options': 'DENY',
   'X-XSS-Protection': '1; mode=block',
   'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
-  'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';
-  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';",
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
   'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
   'Pragma': 'no-cache',
@@ -89,11 +91,11 @@ export class SimpleWAF {
   private blockedPatterns = [
     { pattern: /<script[^>]*>/i, reason: 'XSS attempt detected', severity: 'HIGH' as const },
     { pattern: /javascript:/i, reason: 'JavaScript protocol detected', severity: 'HIGH' as const },
-    { pattern: /on\\w+\\s*=/i, reason: 'Event handler detected', severity: 'HIGH' as const },
-    { pattern: /union\\s+select/i, reason: 'SQL injection attempt', severity: 'CRITICAL' as const },
-    { pattern: /;\\s*drop\\s+table/i, reason: 'SQL injection attempt', severity: 'CRITICAL' as const },
-    { pattern: /\\.\\.\\/|\\.\\.\\\\/g, reason: 'Path traversal attempt', severity: 'HIGH' as const },
-    { pattern: /%00|\\0/g, reason: 'Null byte injection', severity: 'HIGH' as const },
+    { pattern: /on\w+\s*=/i, reason: 'Event handler detected', severity: 'HIGH' as const },
+    { pattern: /union\s+select/i, reason: 'SQL injection attempt', severity: 'CRITICAL' as const },
+    { pattern: /;\s*drop\s+table/i, reason: 'SQL injection attempt', severity: 'CRITICAL' as const },
+    { pattern: /\.\.\/|\.\.\//g, reason: 'Path traversal attempt', severity: 'HIGH' as const },
+    { pattern: /%00|\0/g, reason: 'Null byte injection', severity: 'HIGH' as const },
   ];
 
   inspect(req: WAFRequest): WAFResult {
@@ -146,6 +148,7 @@ export function securityHeadersMiddleware(
 }
 
 // ─── Middleware: Rate Limiting ────────────────────────────────────────────────
+
 export function rateLimitMiddleware(
   req: Request,
   res: Response,
@@ -171,6 +174,7 @@ export function rateLimitMiddleware(
 }
 
 // ─── Middleware: Authentication (API Key) ─────────────────────────────────────
+
 export async function authMiddleware(
   req: Request,
   res: Response,
@@ -184,7 +188,7 @@ export async function authMiddleware(
 
   const manager = getAuthManager();
   const result = await manager.validateRequest({
-    headers: Object.fromEntries(req.headers.entries()) as Record<string, string>,
+    headers: Object.fromEntries(Object.entries(req.headers).map(([k, v]) => [k, String(v ?? '')])),
     method: req.method,
     path: req.path,
     remoteAddress: req.ip || 'unknown',
@@ -196,24 +200,27 @@ export async function authMiddleware(
   }
 
   // Attach user context to request
-  // @ts-expect-error - extending Express Request
-  req.user = { principalId: result.principalId, scopes: result.scopes };
+  (req as AuthedRequest).user = {
+    principalId: result.principalId || 'anonymous',
+    scopes: result.scopes,
+  };
   next();
 }
 
 // ─── Middleware: Authorization (RBAC) ─────────────────────────────────────────
+
 export async function rbacMiddleware(
-  req: Request,
+  req: AuthedRequest,
   res: Response,
   next: NextFunction,
   resource: string,
   action: string
 ): Promise<void> {
-  // @ts-expect-error
   const userContext: UserContext = {
     principalId: req.user?.principalId || 'anonymous',
     roles: [],
     scopes: req.user?.scopes || [],
+    ownedResources: [],
   };
 
   const rbac = getRBAC();
@@ -236,6 +243,7 @@ export async function rbacMiddleware(
 }
 
 // ─── Middleware: WAF ──────────────────────────────────────────────────────────
+
 export function wafMiddleware(
   req: Request,
   res: Response,
@@ -245,7 +253,7 @@ export function wafMiddleware(
   const result = waf.inspect({
     method: req.method,
     path: req.path,
-    headers: Object.fromEntries(req.headers.entries()) as Record<string, string>,
+    headers: Object.fromEntries(Object.entries(req.headers).map(([k, v]) => [k, String(v ?? '')])),
     body: req.body as Record<string, unknown> | undefined,
     query: req.query as unknown as Record<string, string>,
   });

@@ -107,9 +107,11 @@ export const LOW_FRICTION_POLICY: PolicyConfig = {
 export interface PolicyStore {
   getPolicy(policyId: string): PolicyConfig | undefined;
   listPolicies(): PolicyConfig[];
+  listPoliciesByType(type: string): PolicyConfig[];
   createPolicy(policy: PolicyConfig): void;
   updatePolicy(policyId: string, updates: Partial<PolicyConfig>): PolicyConfig | undefined;
   deprecatePolicy(policyId: string): boolean;
+  deletePolicy(policyId: string): boolean;
 }
 
 /**
@@ -132,6 +134,10 @@ export class InMemoryPolicyStore implements PolicyStore {
 
   listPolicies(): PolicyConfig[] {
     return Array.from(this.policies.values());
+  }
+
+  listPoliciesByType(type: string): PolicyConfig[] {
+    return Array.from(this.policies.values()).filter((p) => p.policyId.includes(type) || type === 'VERIFICATION');
   }
 
   createPolicy(policy: PolicyConfig): void {
@@ -174,6 +180,10 @@ export class InMemoryPolicyStore implements PolicyStore {
       details: 'Policy deprecated',
     });
     return true;
+  }
+
+  deletePolicy(policyId: string): boolean {
+    return this.policies.delete(policyId);
   }
 
   getAuditLog(): Array<{ action: string; policyId: string; timestamp: string; details: string }> {

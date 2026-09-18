@@ -5,30 +5,30 @@
 
  RUN  v1.6.1 /Users/nickrotich/Desktop/portfolio/projects/python/verified-attention/packages/pipeline
 
- ✓ dlq/src/index.test.ts  (11 tests) 19ms
- ✓ src/normalization.test.ts  (34 tests) 8ms
- ✓ dedup/src/index.test.ts  (13 tests) 3ms
- ✓ src/validation.test.ts  (30 tests) 8ms
- ✓ tests/chaos.test.ts  (7 tests) 19ms
- ✓ src/pipeline.test.ts  (18 tests) 12ms
+ ✓ src/normalization.test.ts  (34 tests) 19ms
+ ✓ dedup/src/index.test.ts  (13 tests) 4ms
+ ✓ dlq/src/index.test.ts  (11 tests) 40ms
+ ✓ src/validation.test.ts  (30 tests) 40ms
+ ✓ src/pipeline.test.ts  (18 tests) 7ms
+ ✓ tests/chaos.test.ts  (7 tests) 18ms
 stdout | tests/load.test.ts > Load Test: 10K evidence/sec > should sustain 10,000 evidence items per second through all stages
 
 === Load Test Results ===
 Batch size: 10000
-Elapsed: 206.9ms
-Throughput: 48333 evidence/sec
+Elapsed: 40.2ms
+Throughput: 248581 evidence/sec
 Processed: 10000
 
 stdout | tests/load.test.ts > Load Test: 10K evidence/sec > should measure latency percentiles under load
 
 === Latency Percentiles ===
 p50: 0.001ms
-p95: 0.003ms
-p99: 0.006ms
+p95: 0.001ms
+p99: 0.002ms
 
- ✓ tests/load.test.ts  (4 tests) 376ms
- ✓ features/src/features.test.ts  (8 tests) 4ms
- ✓ enrichment/src/index.test.ts  (6 tests) 54ms
+ ✓ tests/load.test.ts  (4 tests) 203ms
+ ✓ enrichment/src/index.test.ts  (6 tests) 5ms
+ ✓ features/src/features.test.ts  (8 tests) 5ms
 stdout | heartbeat/src/index.test.ts > HeartbeatStage > should execute without errors
 Heartbeat stage executed
 
@@ -36,6 +36,6 @@ Heartbeat stage executed
 
  Test Files  10 passed (10)
       Tests  132 passed (132)
-   Start at  01:02:24
-   Duration  1.43s (transform 2.03s, setup 0ms, collect 3.94s, tests 505ms, environment 1ms, prepare 1.81s)
+   Start at  03:04:10
+   Duration  1.57s (transform 1.89s, setup 0ms, collect 3.71s, tests 343ms, environment 1ms, prepare 2.52s)
 
