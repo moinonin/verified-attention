@@ -126,8 +126,8 @@ export class TLSManagerImpl implements TLSManager {
   }
 
   checkCertificateExpiry(): { expiringSoon: boolean; daysUntilExpiry: number } {
-    const externalExpiry = new Date(this.status.external.certificateExpiry);
-    const internalExpiry = new Date(this.status.internal.certificateExpiry);
+    const externalExpiry = new Date(this.status.external.certificateExpiry ?? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString());
+    const internalExpiry = new Date(this.status.internal.certificateExpiry ?? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString());
     const now = new Date();
 
     const externalDays = Math.floor((externalExpiry.getTime() - now.getTime()) / (24 * 60 * 60 * 1000));
